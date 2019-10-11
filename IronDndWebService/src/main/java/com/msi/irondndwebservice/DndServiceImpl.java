@@ -53,7 +53,6 @@ public class DndServiceImpl implements DndService {
             nRet = OraFrmClient.client_LogIn(serverName, port, userName, pass, domain);
         }
         if (nRet <= 0) {
-            OraFrmClient.client_LogOut();
             return new Long(nRet);
         }
 

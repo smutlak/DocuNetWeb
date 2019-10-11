@@ -23,7 +23,7 @@ public class DndServiceMultiThreadedImpl {
         ExecutorService es = Executors.newFixedThreadPool(5);
         Endpoint ep = Endpoint.create(new DndServiceImpl());
         ep.setExecutor(es);
-        System.out.println("DND client service is listening on port:"+port);
+        System.out.println("DND client service(multiple connection) is listening on port:"+port);
         ep.publish("http://127.0.0.1:"+port+"/DndService");
     }
 }

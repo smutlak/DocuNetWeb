@@ -16,9 +16,17 @@ public class DndServiceEndpoint {
     /**
      * @param args the command line arguments
      */
-//    public static void main(String[] args) {
-////        Endpoint endPoint = Endpoint.create(new DndServiceImpl());
-////        endPoint.publish("http://127.0.0.1:10000/DndService"); //supply your desired url to the publish method to actually expose the service.
-//    }
+    public static void main(String[] args) {
+//        Endpoint endPoint = Endpoint.create(new DndServiceImpl());
+//        endPoint.publish("http://127.0.0.1:10000/DndService"); //supply your desired url to the publish method to actually expose the service.
+
+        int port = 10000;
+        if (args.length > 0) {
+            port = Integer.parseInt(args[0]);
+        }
+        Endpoint endPoint = Endpoint.create(new DndServiceImpl());
+        System.out.println("DND client service(single connection) is listening on port:" + port);
+        endPoint.publish("http://127.0.0.1:" + port + "/DndService");
+    }
 
 }

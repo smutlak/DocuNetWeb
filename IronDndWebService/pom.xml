@@ -38,7 +38,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.msi.irondndwebservice.DndServiceMultiThreadedImpl</mainClass>
+                            <mainClass>com.msi.irondndwebservice.DndServiceEndpoint</mainClass>
                             <classpathPrefix>dependency-jars/</classpathPrefix>
                         </manifest>
                     </archive>
