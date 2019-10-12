@@ -46,7 +46,7 @@ public class DndServiceImpl implements DndService {
     }
 
     @Override
-    public Long getDocumentPagesCount(String serverName, Integer port, String userName, String pass, String domain, Long docId) {
+    public synchronized Long getDocumentPagesCount(String serverName, Integer port, String userName, String pass, String domain, Long docId) {
         int nRet = OraFrmClient.client_LogIn(serverName, port, userName, pass, domain);
         if (nRet == OraFrmClient.CLIENT_ALREADY_LOGGED_IN) {
             OraFrmClient.client_LogOut();
