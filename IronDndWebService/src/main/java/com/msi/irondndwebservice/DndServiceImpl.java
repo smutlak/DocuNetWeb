@@ -16,7 +16,7 @@ import javax.jws.WebService;
 public class DndServiceImpl implements DndService {
 
     @Override
-    public String checkCall(String input) {
+    public synchronized String checkCall(String input) {
         return "Time on server:" + (new java.util.Date()) + "\n" + "Your input:" + input + "Possible Error Codes \n </br>"
                 + "public static final int CLIENT_ALREADY_LOGGED_IN = -99;\n"
                 + "	public static final int AUTHENTICATION_EXC = -100;\n"
@@ -62,13 +62,35 @@ public class DndServiceImpl implements DndService {
     }
 
     @Override
-    public Integer SetDocumentIndicesValues(String serverName, Integer port, String userName, String pass, String domain, Integer docTypeID, Long docId, String indicesValues) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public synchronized Integer SetDocumentIndicesValues(String serverName, Integer port, String userName, String pass, String domain, Integer docTypeID, Long docId, String indicesValues) {
+        int nRet = OraFrmClient.client_LogIn(serverName, port, userName, pass, domain);
+        if (nRet == OraFrmClient.CLIENT_ALREADY_LOGGED_IN) {
+            OraFrmClient.client_LogOut();
+            nRet = OraFrmClient.client_LogIn(serverName, port, userName, pass, domain);
+        }
+        if (nRet <= 0) {
+            return nRet;
+        }
+
+        Integer pagesCount = OraFrmClient.SetDocumentIndicesValues(docTypeID, docId, indicesValues);
+        OraFrmClient.client_LogOut();
+        return pagesCount;
     }
 
     @Override
-    public Long createDocument(String serverName, Integer port, String userName, String pass, String domain, Integer docTypeID, Integer parentID, String docName, String docDesc, String indicesValues, String pages) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public synchronized Long createDocument(String serverName, Integer port, String userName, String pass, String domain, Integer docTypeID, Integer parentID, String docName, String docDesc, String indicesValues, String pages) {
+        int nRet = OraFrmClient.client_LogIn(serverName, port, userName, pass, domain);
+        if (nRet == OraFrmClient.CLIENT_ALREADY_LOGGED_IN) {
+            OraFrmClient.client_LogOut();
+            nRet = OraFrmClient.client_LogIn(serverName, port, userName, pass, domain);
+        }
+        if (nRet <= 0) {
+            return new Long(nRet);
+        }
+
+        Long pagesCount = OraFrmClient.createDocument(docTypeID, parentID, docName, docDesc, indicesValues, pages);
+        OraFrmClient.client_LogOut();
+        return pagesCount;
     }
 
 }
