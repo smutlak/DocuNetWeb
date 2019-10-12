@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sameer.docunetweb;
+package com.mis.docunetweb;
 
 import java.io.Serializable;
 import javax.faces.application.FacesMessage;
@@ -27,7 +27,7 @@ public class ImageController implements Serializable {
     private String imageUrl;
 
     public ImageController() {
-        imageUrl = "/resources/images/testImage1.jpg";
+        imageUrl = "/resources/images/img1.jpg";
     }
 
     public void selectEndListener(final ImageAreaSelectEvent e) {
