@@ -28,7 +28,6 @@ public interface DndService {
 //            @WebParam(name = "userName") String userName,
 //            @WebParam(name = "pass") String pass,
 //            @WebParam(name = "domain") String domain);
-
     @WebMethod
     Long getDocumentPagesCount(@WebParam(name = "serverName") String serverName,
             @WebParam(name = "port") Integer port,
@@ -53,13 +52,20 @@ public interface DndService {
             @WebParam(name = "userName") String userName,
             @WebParam(name = "pass") String pass,
             @WebParam(name = "domain") String domain,
-            @WebParam(name = "docTypeID") Integer docTypeID, 
-            @WebParam(name = "parentID") Integer parentID, 
-            @WebParam(name = "docName") String docName, 
-            @WebParam(name = "docDesc") String docDesc, 
-            @WebParam(name = "indicesValues") String indicesValues, 
+            @WebParam(name = "docTypeID") Integer docTypeID,
+            @WebParam(name = "parentID") Integer parentID,
+            @WebParam(name = "docName") String docName,
+            @WebParam(name = "docDesc") String docDesc,
+            @WebParam(name = "indicesValues") String indicesValues,
             @WebParam(name = "pages") String pages);
 
 //    @WebMethod
 //    Integer client_LogOut();
+    @WebMethod
+    Integer GetDocumentPages(@WebParam(name = "serverName") String serverName,
+            @WebParam(name = "port") Integer port,
+            @WebParam(name = "userName") String userName,
+            @WebParam(name = "pass") String pass,
+            @WebParam(name = "domain") String domain,
+            @WebParam(name = "docId") Long docId);
 }
