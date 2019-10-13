@@ -12,7 +12,7 @@ import javax.jws.WebService;
  *
  * @author smutlak
  */
-@WebService(endpointInterface = "com.msi.irondndwebservice.DndService")
+@WebService(endpointInterface = "com.mis.irondndwebservice.DndService")
 public class DndServiceImpl implements DndService {
 
     @Override
