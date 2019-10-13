@@ -9,22 +9,69 @@
         <title>MIS DocuNet Web Portal</title>
     </h:head>
     <style>
-        .ui-panel-images {
-            width: 100%;
-            height: 100%;
-        }
-
-        .ui-galleria-panel {
-            width: 100%;
-            height: 100%;
+        #imageWrapper {
+            height: 85vh; /* vh stands for view-port height, 1vh is 1% of screen height */
         }
     </style>
     <h:body>
         MIS DocuNet Web Portal
         <h:form>
-            <p:galleria value="#{documentView.pages}" var="page">
-                <p:graphicImage library="images" name="#{page}" alt="Image Description for #{page}" title="#{page}"/>
-            </p:galleria>
+            <p:outputPanel id="example">  
+                <!--<p:commandLink update="example">  
+                    <f:setPropertyActionListener target="#{imageController.imageUrl}" value="/resources/images/img1.jpg" />  
+                    <p:graphicImage value="/resources/images/img1.jpg" width="75" height="75"/>  
+                </p:commandLink>  
+                <p:commandLink update="example">  
+                    <f:setPropertyActionListener target="#{imageController.imageUrl}" value="/resources/images/img2.jpg" />  
+                    <p:graphicImage value="/resources/images/img2.jpg" width="75" height="75"/>  
+                </p:commandLink>  
+                <p:commandLink update="example">  
+                    <f:setPropertyActionListener target="#{imageController.imageUrl}" value="/resources/images/img3.jpg" />  
+                    <p:graphicImage value="/resources/images/img3.jpg" width="75" height="75"/>  
+                </p:commandLink>  
+                <p:commandLink update="example">  
+                    <f:setPropertyActionListener target="#{imageController.imageUrl}" value="/resources/images/img4.jpg" />  
+                    <p:graphicImage value="/resources/images/img4.jpg" width="75" height="75"/>  
+                </p:commandLink>  -->
+
+                <p:growl id="growl" showDetail="true" sticky="true" />  
+
+                <div id="imageWrapper" style="width:100%; margin:auto; overflow:scroll; position:relative;">  
+                    <p:graphicImage id="myImage" style="width:100%;" value="#{imageController.imageUrl}" />  
+                </div>  
+
+                <pe:imageAreaSelect id="areaSelect"  
+                                    for="myImage"  
+                                    widgetVar="areaSelectWidget"  
+                                    autoHide="true"  
+                                    handles="false"  
+                                    movable="false"  
+                                    persistent="false"  
+                                    resizable="false"  
+                                    parentSelector="#imageWrapper">  
+                    <p:ajax event="selectEnd" listener="#{imageController.selectEndListener}" update="growl"/>  
+                </pe:imageAreaSelect>  
+
+                <pe:imageRotateAndResize id="rotateAndResize" for="myImage" widgetVar="rotateAndResizeWidget">  
+                    <p:ajax event="rotate" listener="#{imageController.rotateListener}"  
+                            update="growl" oncomplete="PF('areaSelectWidget').reload();"/>  
+                    <pe:javascript event="resize" execute="PF('areaSelectWidget').reload();"/>  
+                </pe:imageRotateAndResize>  
+
+                <p:commandButton icon="ui-icon-arrowreturnthick-1-w" value="Rotate Left"  
+                                 onclick="PF('rotateAndResizeWidget').rotateLeft(90);return false;"/>  
+                <p:commandButton icon="ui-icon-arrowreturnthick-1-e" value="Rotate Right"  
+                                 onclick="PF('rotateAndResizeWidget').rotateRight(90);return false;"/>  
+                <p:commandButton icon="ui-icon-zoomin" value="Scale +"  
+                                 onclick="PF('rotateAndResizeWidget').scale(1.05);return false;"/>  
+                <p:commandButton icon="ui-icon-zoomout" value="Scale -"  
+                                 onclick="PF('rotateAndResizeWidget').scale(0.95);return false;"/>  
+                <p:commandButton icon="ui-icon-zoomout" value="Previous Page"  
+                                 onclick="PF('rotateAndResizeWidget').scale(0.95);return false;"/>  
+                <p:outputLabel value="#"></p:outputLabel>
+                <p:commandButton icon="ui-icon-zoomout" value="Next Page"  
+                                 onclick="PF('rotateAndResizeWidget').scale(0.95);return false;"/>  
+            </p:outputPanel>  
         </h:form>
     </h:body>
 </html>
