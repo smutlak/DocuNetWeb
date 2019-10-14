@@ -5,7 +5,6 @@
  */
 package com.mis.irondndwebservice;
 
-import com.invest4all.inclient.OraFrmClient;
 import static com.invest4all.inclient.OraFrmClient.ALREADY_BOUND_EXC;
 import static com.invest4all.inclient.OraFrmClient.AUTHENTICATION_EXC;
 import static com.invest4all.inclient.OraFrmClient.DB_IS_DISCONNECTED_EXC;
@@ -64,7 +63,11 @@ public class DndServiceImpl implements DndService {
 
     @Override
     public synchronized String checkCall(String input) {
-        return "Time on server:" + (new java.util.Date()) + "\n" + "Your input:" + input + "Possible Error Codes \n </br>"
+        String property = "java.io.tmpdir";
+        String tempDir = System.getProperty(property);
+        return "Time on server:" + (new java.util.Date()) + "\n </br>" + "Your input: " + input
+                + "\n </br> OS current temporary directory is " + tempDir
+                + "Possible Error Codes \n </br>"
                 + "public static final int CLIENT_ALREADY_LOGGED_IN = -99;\n"
                 + "	public static final int AUTHENTICATION_EXC = -100;\n"
                 + "	public static final int REMOTE_EXC = -101;\n"
@@ -244,7 +247,7 @@ public class DndServiceImpl implements DndService {
                 name.setValue(indValsArray[i]);
                 i++;
             }
-            
+
             inDocument doc = new inDocument();
             doc.setName(docName);
             doc.setParentID(parentID);
@@ -252,7 +255,7 @@ public class DndServiceImpl implements DndService {
             doc.setIsCompressed(false);
             doc.setIsCompressed(false);
             doc.setSaveMethod(1); // MEDIA SAVE METHOD
-            
+
             doc.setDocType(doctype);
             doc.setIndicesValues(indices);
             return c.createDocument(doc);
@@ -265,7 +268,7 @@ public class DndServiceImpl implements DndService {
             return new Long(DB_IS_DISCONNECTED_EXC);
         } catch (RuntimeException e) {
             return new Long(SQL_EXC);
-        }finally{
+        } finally {
             logOut(c);
         }
     }
