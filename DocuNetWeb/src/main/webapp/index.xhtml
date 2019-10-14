@@ -51,10 +51,10 @@
                 <p:commandButton icon="ui-icon-zoomout" value="Scale -"  
                                  onclick="PF('rotateAndResizeWidget').scale(0.95);return false;"/>  
                 <p:commandButton actionListener="#{documentController.prevPage()}" icon="ui-icon-zoomout" value="Previous Page"  
-                                 update="example" disabled="#{documentController.lastPage}" />  
-                <p:outputLabel value="#"></p:outputLabel>
+                                 update="example" disabled="#{documentController.firstPage}" />  
+                <p:outputLabel value="#{documentController.pageFrom}"></p:outputLabel>
                 <p:commandButton actionListener="#{documentController.nextPage}"  icon="ui-icon-zoomout" value="Next Page"
-                                 update="example" disabled="#{documentController.firstPage}"/>  
+                                 update="example" disabled="#{documentController.lastPage}"/>  
             </p:outputPanel>  
         </h:form>
     </h:body>

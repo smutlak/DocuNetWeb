@@ -39,9 +39,14 @@ public class DocumentController implements Serializable {
     String docPath = "D:/temp/4242521";
     private List<String> pages;
     private Integer currIndex;
+    private Boolean lastPage;
+    private Boolean firstPage;
+    private String pageFrom;
 
     public DocumentController() {
         currIndex = 0;
+        firstPage = true;
+        lastPage = false;
     }
 
     @PostConstruct
@@ -51,6 +56,8 @@ public class DocumentController implements Serializable {
             pages.add("img" + i + ".jpg");
         }*/
         currIndex = 0;
+        firstPage = true;
+        lastPage = false;
     }
 
     public List<String> getPages() {
@@ -65,6 +72,7 @@ public class DocumentController implements Serializable {
                 }
             }
         }
+        updateFlags();
         return pages;
     }
 
@@ -122,25 +130,49 @@ public class DocumentController implements Serializable {
 
     public void nextPage() {
         this.currIndex++;
+        updateFlags();
     }
 
     public void prevPage() {
         this.currIndex--;
+        updateFlags();
     }
 
-    public Boolean lastPage() {
-        if (this.currIndex >= (this.pages.size()-1)) {
-            return true;
+    public Boolean getLastPage() {
+        return lastPage;
+    }
+
+    public void setLastPage(Boolean lastPage) {
+        this.lastPage = lastPage;
+    }
+
+    public Boolean getFirstPage() {
+        return firstPage;
+    }
+
+    public void setFirstPage(Boolean firstPage) {
+        this.firstPage = firstPage;
+    }
+
+    private void updateFlags() {
+        if (this.pages != null) {
+            lastPage = this.currIndex >= (this.pages.size() - 1);
+        } else {
+            lastPage = false;
         }
-        return false;
+
+        firstPage = this.currIndex <= 0;
+        this.pageFrom = (this.currIndex + 1) + " / " + this.pages.size();
     }
 
-    public Boolean firstPage() {
-        if (this.currIndex <= 0) {
-            return true;
-        }
-        return false;
-
+    public String getPageFrom() {
+        return pageFrom;
     }
+
+    public void setPageFrom(String pageFrom) {
+        this.pageFrom = pageFrom;
+    }
+    
+    
 
 }
