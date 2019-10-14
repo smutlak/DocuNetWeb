@@ -17,11 +17,28 @@
         MIS DocuNet Web Portal
         <h:form>
             <p:outputPanel id="example">  
+                <!--<p:commandLink update="example">  
+                    <f:setPropertyActionListener target="#{documentController.imageUrl}" value="/resources/images/img1.jpg" />  
+                    <p:graphicImage value="/resources/images/img1.jpg" width="75" height="75"/>  
+                </p:commandLink>  
+                <p:commandLink update="example">  
+                    <f:setPropertyActionListener target="#{documentController.imageUrl}" value="/resources/images/img2.jpg" />  
+                    <p:graphicImage value="/resources/images/img2.jpg" width="75" height="75"/>  
+                </p:commandLink>  
+                <p:commandLink update="example">  
+                    <f:setPropertyActionListener target="#{documentController.imageUrl}" value="/resources/images/img3.jpg" />  
+                    <p:graphicImage value="/resources/images/img3.jpg" width="75" height="75"/>  
+                </p:commandLink>  
+                <p:commandLink update="example">  
+                    <f:setPropertyActionListener target="#{documentController.imageUrl}" value="/resources/images/img4.jpg" />  
+                    <p:graphicImage value="/resources/images/img4.jpg" width="75" height="75"/>  
+                </p:commandLink>  -->
+
                 <p:growl id="growl" showDetail="true" sticky="true" />  
 
-                <h:panelGroup id="imageWrapper" layout="block" style="width:100%; margin:auto; overflow:scroll; position:relative;">
+                <div id="imageWrapper" style="width:100%; margin:auto; overflow:scroll; position:relative;">  
                     <p:graphicImage id="myImage" style="width:100%;" value="#{documentController.currPage}" />  
-                </h:panelGroup>
+                </div>  
 
                 <pe:imageAreaSelect id="areaSelect"  
                                     for="myImage"  
@@ -52,9 +69,8 @@
                 <p:commandButton icon="ui-icon-zoomout" value="Previous Page"  
                                  onclick="PF('rotateAndResizeWidget').scale(0.95);return false;"/>  
                 <p:outputLabel value="#"></p:outputLabel>
-                <p:commandButton actionListener="#{documentController.nextPage}"  icon="ui-icon-zoomout" value="Next Page"
-                                 update="imageWrapper"
-                                 oncomplete="PF('areaSelectWidget').reload();"/>  
+                <p:commandButton icon="ui-icon-zoomout" value="Next Page"  
+                                 onclick="PF('rotateAndResizeWidget').scale(0.95);return false;"/>  
             </p:outputPanel>  
         </h:form>
     </h:body>
