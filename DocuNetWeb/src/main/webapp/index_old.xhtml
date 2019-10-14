@@ -70,7 +70,9 @@
                                  onclick="PF('rotateAndResizeWidget').scale(0.95);return false;"/>  
                 <p:outputLabel value="#"></p:outputLabel>
                 <p:commandButton icon="ui-icon-zoomout" value="Next Page"  
-                                 onclick="PF('rotateAndResizeWidget').scale(0.95);return false;"/>  
+                                 onclick="PF('rotateAndResizeWidget').scale(0.95);return false;">  
+                    <f:setPropertyActionListener target="#{documentController.currPage}" value="/resources/images/img1.jpg" />
+                </p:commandButton>
             </p:outputPanel>  
         </h:form>
     </h:body>

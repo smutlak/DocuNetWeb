@@ -38,7 +38,7 @@ public class DocumentController implements Serializable {
     //String docPath = "C:\\Users\\smutlak\\AppData\\Local\\Temp\\DND\\192.168.1.210\\4242521";
     String docPath = "D:/temp/4242521";
     private List<String> pages;
-    private int currIndex;
+    private Integer currIndex;
 
     public DocumentController() {
         currIndex = 0;
@@ -58,8 +58,8 @@ public class DocumentController implements Serializable {
         pages = new ArrayList();
         File file = new File(docPath);
         if (file.exists()) {
-            for (File p : file.listFiles() ) {
-                if(!p.getName().endsWith("thb")){
+            for (File p : file.listFiles()) {
+                if (!p.getName().endsWith("thb")) {
                     System.out.println(p.getAbsolutePath());
                     pages.add(p.getAbsolutePath());
                 }
@@ -106,7 +106,6 @@ public class DocumentController implements Serializable {
 //        this.getPages();
 //        return pages.get(currIndex);
 //    }
-    
     public StreamedContent getCurrPage() throws IOException {
         this.getPages();
         FacesContext context = FacesContext.getCurrentInstance();
@@ -114,16 +113,34 @@ public class DocumentController implements Serializable {
         if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
             // So, we're rendering the view. Return a stub StreamedContent so that it will generate right URL.
             return new DefaultStreamedContent();
-        }
-        else {
+        } else {
             // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
-            String filename = context.getExternalContext().getRequestParameterMap().get("filename");
-            return new DefaultStreamedContent(new FileInputStream(new File(pages.get(currIndex))));
+            //String filename = context.getExternalContext().getRequestParameterMap().get("filename");
+            return new DefaultStreamedContent(new FileInputStream(new File(this.getPages().get(currIndex))));
         }
     }
-    
-    public void nextPage(){
+
+    public void nextPage() {
         this.currIndex++;
+    }
+
+    public void prevPage() {
+        this.currIndex--;
+    }
+
+    public Boolean lastPage() {
+        if (this.currIndex >= (this.pages.size()-1)) {
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean firstPage() {
+        if (this.currIndex <= 0) {
+            return true;
+        }
+        return false;
+
     }
 
 }

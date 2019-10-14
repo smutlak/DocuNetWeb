@@ -19,9 +19,10 @@
             <p:outputPanel id="example">  
                 <p:growl id="growl" showDetail="true" sticky="true" />  
 
-                <h:panelGroup id="imageWrapper" layout="block" style="width:100%; margin:auto; overflow:scroll; position:relative;">
-                    <p:graphicImage id="myImage" style="width:100%;" value="#{documentController.currPage}" />  
-                </h:panelGroup>
+                <div id="imageWrapper" style="width:100%; margin:auto; overflow:scroll; position:relative;">  
+                    <p:graphicImage id="myImage" style="width:100%;" value="#{documentController.currPage}" cache="false">  
+                    </p:graphicImage>
+                </div>
 
                 <pe:imageAreaSelect id="areaSelect"  
                                     for="myImage"  
@@ -42,19 +43,18 @@
                 </pe:imageRotateAndResize>  
 
                 <p:commandButton icon="ui-icon-arrowreturnthick-1-w" value="Rotate Left"  
-                                 onclick="PF('rotateAndResizeWidget').rotateLeft(90);return false;"/>  
+                                 onclick="PF('rotateAndResizeWidget').rotateLeft(10);return false;"/>  
                 <p:commandButton icon="ui-icon-arrowreturnthick-1-e" value="Rotate Right"  
-                                 onclick="PF('rotateAndResizeWidget').rotateRight(90);return false;"/>  
+                                 onclick="PF('rotateAndResizeWidget').rotateRight(10);return false;"/>  
                 <p:commandButton icon="ui-icon-zoomin" value="Scale +"  
                                  onclick="PF('rotateAndResizeWidget').scale(1.05);return false;"/>  
                 <p:commandButton icon="ui-icon-zoomout" value="Scale -"  
                                  onclick="PF('rotateAndResizeWidget').scale(0.95);return false;"/>  
-                <p:commandButton icon="ui-icon-zoomout" value="Previous Page"  
-                                 onclick="PF('rotateAndResizeWidget').scale(0.95);return false;"/>  
+                <p:commandButton actionListener="#{documentController.prevPage()}" icon="ui-icon-zoomout" value="Previous Page"  
+                                 update="example" disabled="#{documentController.lastPage}" />  
                 <p:outputLabel value="#"></p:outputLabel>
                 <p:commandButton actionListener="#{documentController.nextPage}"  icon="ui-icon-zoomout" value="Next Page"
-                                 update="imageWrapper"
-                                 oncomplete="PF('areaSelectWidget').reload();"/>  
+                                 update="example" disabled="#{documentController.firstPage}"/>  
             </p:outputPanel>  
         </h:form>
     </h:body>
