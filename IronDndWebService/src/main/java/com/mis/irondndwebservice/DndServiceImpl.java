@@ -45,6 +45,8 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.jws.WebService;
 import javax.management.InvalidAttributeValueException;
 import javax.naming.CommunicationException;
@@ -61,12 +63,12 @@ import javax.security.sasl.AuthenticationException;
 @WebService(endpointInterface = "com.mis.irondndwebservice.DndService")
 public class DndServiceImpl implements DndService {
 
+    static String TEMP_DIR = System.getProperty("java.io.tmpdir");
+
     @Override
     public synchronized String checkCall(String input) {
-        String property = "java.io.tmpdir";
-        String tempDir = System.getProperty(property);
         return "Time on server:" + (new java.util.Date()) + "\n </br>" + "Your input: " + input
-                + "\n </br> OS current temporary directory is " + tempDir
+                + "\n </br> OS current temporary directory is " + TEMP_DIR
                 + "\n </br>Possible Error Codes \n </br>"
                 + "public static final int CLIENT_ALREADY_LOGGED_IN = -99;\n"
                 + "	public static final int AUTHENTICATION_EXC = -100;\n"
@@ -101,13 +103,13 @@ public class DndServiceImpl implements DndService {
         AtomicInteger nRet = new AtomicInteger(0);
         c = logIn(serverName, port, userName, pass, domain, nRet);
         if (nRet.get() <= 0) {
-            System.out.println("Login was unsuccessful"+nRet);
+            System.out.println("Login was unsuccessful" + nRet);
             return new Long(nRet.get());
         }
         try {
             DocInfo docInfo = c.getDocumentInfo(docId);
             if (docInfo != null) {
-                System.out.println("Document Pages count"+docInfo.getPages());
+                System.out.println("Document Pages count" + docInfo.getPages());
                 return new Long(docInfo.getPages());
             } else {
                 return new Long(-1);
@@ -129,10 +131,10 @@ public class DndServiceImpl implements DndService {
     @Override
     public synchronized Integer SetDocumentIndicesValues(String serverName, Integer port, String userName, String pass, String domain, Integer docTypeID, Long docId, String indicesValues) {
         inClient c = null;
-        AtomicInteger nRet = new AtomicInteger(0); 
+        AtomicInteger nRet = new AtomicInteger(0);
         c = logIn(serverName, port, userName, pass, domain, nRet);
         if (nRet.get() <= 0) {
-            System.out.println("Login was unsuccessful"+nRet);
+            System.out.println("Login was unsuccessful" + nRet);
             return nRet.get();
         }
 
@@ -207,7 +209,7 @@ public class DndServiceImpl implements DndService {
         AtomicInteger nRet = new AtomicInteger(0);
         c = logIn(serverName, port, userName, pass, domain, nRet);
         if (nRet.get() <= 0) {
-            System.out.println("Login was unsuccessful"+nRet);
+            System.out.println("Login was unsuccessful" + nRet);
             return new Long(nRet.get());
         }
 
@@ -281,7 +283,43 @@ public class DndServiceImpl implements DndService {
 
     @Override
     public Integer GetDocumentPages(String serverName, Integer port, String userName, String pass, String domain, Long docId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        inClient c = null;
+        AtomicInteger nRet = new AtomicInteger(0);
+        c = logIn(serverName, port, userName, pass, domain, nRet);
+        if (nRet.get() <= 0) {
+            System.out.println("Login was unsuccessful" + nRet);
+            return nRet.get();
+        }
+
+        try {
+            /*
+                CDndDocument* pDocInfo = new CDndDocument(server_id, doc_id, lVersionID);
+		if(pDoc != NULL) pDocInfo->SetDocTypeID(pDoc->GetDocTypeID());
+
+		CString sDocPath = _T("");
+		sDocPath.Format(_T("%s\\%d\\%d\\"), theApp.TEMP_FOLDER, server_id, doc_id);
+		CreateDirectory(sDocPath, NULL);
+		sDocPath.AppendFormat(_T("%ld\\"), lVersionID);
+		CreateDirectory(sDocPath, NULL);
+
+		pDocInfo->SetCashFolder(sDocPath);
+		pDocInfo->GetDocumentPages(sDocPath, TRUE);
+             */
+            inDocument doc = new inDocument();
+            c.getDocument(docId, doc);
+
+            String sDocPath = TEMP_DIR + '\\' + serverName.replaceAll("[\\\\/:*?\"<>|]/", "_") + '\\' + docId + '\\';
+            System.out.println("Document(" + docId + ") path=" + sDocPath);
+            //sDocPath.Format(_T("%s\\%d\\%d\\"), theApp.TEMP_FOLDER, server_id, doc_id);
+            c.getDocumentPages(doc, sDocPath);
+            return 1;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return EXCEPTION;
+        } finally {
+            logOut(c);
+        }
     }
 
     private inClient logIn(String serverName, int port, String userName, String pass, String domain, AtomicInteger error) {
@@ -306,7 +344,7 @@ public class DndServiceImpl implements DndService {
                     return null;
                 default:
                     error.set(c.getDbId());
-                    System.out.println("Login user:"+error.get()+ "client object"+c);
+                    System.out.println("Login user:" + error.get() + "client object" + c);
                     return c;
             }
 
