@@ -44,6 +44,7 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.jws.WebService;
 import javax.management.InvalidAttributeValueException;
 import javax.naming.CommunicationException;
@@ -52,7 +53,6 @@ import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import javax.naming.directory.InvalidSearchFilterException;
 import javax.security.sasl.AuthenticationException;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -67,7 +67,7 @@ public class DndServiceImpl implements DndService {
         String tempDir = System.getProperty(property);
         return "Time on server:" + (new java.util.Date()) + "\n </br>" + "Your input: " + input
                 + "\n </br> OS current temporary directory is " + tempDir
-                + "Possible Error Codes \n </br>"
+                + "\n </br>Possible Error Codes \n </br>"
                 + "public static final int CLIENT_ALREADY_LOGGED_IN = -99;\n"
                 + "	public static final int AUTHENTICATION_EXC = -100;\n"
                 + "	public static final int REMOTE_EXC = -101;\n"
@@ -98,23 +98,28 @@ public class DndServiceImpl implements DndService {
     @Override
     public synchronized Long getDocumentPagesCount(String serverName, Integer port, String userName, String pass, String domain, Long docId) {
         inClient c = null;
-        Integer nRet = 0;
+        AtomicInteger nRet = new AtomicInteger(0);
         c = logIn(serverName, port, userName, pass, domain, nRet);
-        if (nRet <= 0) {
-            return new Long(nRet);
+        if (nRet.get() <= 0) {
+            System.out.println("Login was unsuccessful"+nRet);
+            return new Long(nRet.get());
         }
         try {
             DocInfo docInfo = c.getDocumentInfo(docId);
             if (docInfo != null) {
+                System.out.println("Document Pages count"+docInfo.getPages());
                 return new Long(docInfo.getPages());
             } else {
                 return new Long(-1);
             }
         } catch (RemoteException e) {
+            e.printStackTrace();
             return new Long(REMOTE_EXC);
         } catch (SQLException e) {
+            e.printStackTrace();
             return new Long(SQL_EXC);
         } catch (DataBaseIsDisconnectedException e) {
+            e.printStackTrace();
             return new Long(DB_IS_DISCONNECTED_EXC);
         } finally {
             logOut(c);
@@ -124,14 +129,11 @@ public class DndServiceImpl implements DndService {
     @Override
     public synchronized Integer SetDocumentIndicesValues(String serverName, Integer port, String userName, String pass, String domain, Integer docTypeID, Long docId, String indicesValues) {
         inClient c = null;
-        Integer nRet = 0;
+        AtomicInteger nRet = new AtomicInteger(0); 
         c = logIn(serverName, port, userName, pass, domain, nRet);
-        if (nRet <= 0) {
-            return nRet;
-        }
-
-        if (nRet <= 0) {
-            return nRet;
+        if (nRet.get() <= 0) {
+            System.out.println("Login was unsuccessful"+nRet);
+            return nRet.get();
         }
 
         try {
@@ -183,13 +185,16 @@ public class DndServiceImpl implements DndService {
             c.setDocumentIndicesValues(doc);
             return 1;
         } catch (RemoteException e) {
+            e.printStackTrace();
             return REMOTE_EXC;
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
+            e.printStackTrace();
             return SQL_EXC;
         } catch (DataBaseIsDisconnectedException e) {
+            e.printStackTrace();
             return DB_IS_DISCONNECTED_EXC;
         } catch (Exception e) {
+            e.printStackTrace();
             return EXCEPTION;
         } finally {
             logOut(c);
@@ -199,14 +204,11 @@ public class DndServiceImpl implements DndService {
     @Override
     public synchronized Long createDocument(String serverName, Integer port, String userName, String pass, String domain, Integer docTypeID, Integer parentID, String docName, String docDesc, String indicesValues, String pages) {
         inClient c = null;
-        Integer nRet = 0;
+        AtomicInteger nRet = new AtomicInteger(0);
         c = logIn(serverName, port, userName, pass, domain, nRet);
-        if (nRet <= 0) {
-            return new Long(nRet);
-        }
-
-        if (nRet <= 0) {
-            return new Long(nRet);
+        if (nRet.get() <= 0) {
+            System.out.println("Login was unsuccessful"+nRet);
+            return new Long(nRet.get());
         }
 
         try {
@@ -261,12 +263,16 @@ public class DndServiceImpl implements DndService {
             return c.createDocument(doc);
 
         } catch (RemoteException e) {
+            e.printStackTrace();
             return new Long(REMOTE_EXC);
         } catch (SQLException e) {
+            e.printStackTrace();
             return new Long(SQL_EXC);
         } catch (DataBaseIsDisconnectedException e) {
+            e.printStackTrace();
             return new Long(DB_IS_DISCONNECTED_EXC);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return new Long(SQL_EXC);
         } finally {
             logOut(c);
@@ -278,60 +284,78 @@ public class DndServiceImpl implements DndService {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private inClient logIn(String serverName, int port, String userName, String pass, String domain, Integer error) {
+    private inClient logIn(String serverName, int port, String userName, String pass, String domain, AtomicInteger error) {
         try {
             String tmp_pass = "";
             if (pass != null) {
 
                 tmp_pass = pass;
             }
-            inClient c = new inClient(serverName, port, userName, tmp_pass, domain);
+            inClient c = null;
+            c = new inClient(serverName, port, userName, tmp_pass, domain);
             int nRet = c.login(serverName, port, userName, tmp_pass, domain);
-            if (nRet == -2) {
-                error = INVALID_USERNAME_PASS;
-                return null;
-            } else if (nRet == -1) {
-                error = SERVER_NOT_FOUND;
-                return null;
-            } else if (nRet == -3) {
-                error = DB_IS_DISCONNECTED_EXC;
-                return null;
-            } else {
-                error = c.getDbId();
-                return c;
+            switch (nRet) {
+                case -2:
+                    error.set(INVALID_USERNAME_PASS);
+                    return null;
+                case -1:
+                    error.set(SERVER_NOT_FOUND);
+                    return null;
+                case -3:
+                    error.set(DB_IS_DISCONNECTED_EXC);
+                    return null;
+                default:
+                    error.set(c.getDbId());
+                    System.out.println("Login user:"+error.get()+ "client object"+c);
+                    return c;
             }
 
         } catch (AuthenticationException e) {
-            error = AUTHENTICATION_EXC;
+            e.printStackTrace();
+            error.set(AUTHENTICATION_EXC);
         } catch (RemoteException e) {
-            error = REMOTE_EXC;
+            e.printStackTrace();
+            error.set(REMOTE_EXC);
         } catch (MalformedURLException e) {
-            error = MALFORMED_URL_EXC;
+            e.printStackTrace();
+            error.set(MALFORMED_URL_EXC);
         } catch (InvalidAttributeValueException e) {
-            error = INVALID_ATTR_VAL_EXC;
+            e.printStackTrace();
+            error.set(INVALID_ATTR_VAL_EXC);
         } catch (InvalidSearchFilterException e) {
-            error = INVALID_SEARCH_EXC;
+            e.printStackTrace();
+            error.set(INVALID_SEARCH_EXC);
         } catch (InvalidNameException e) {
-            error = INVALID_NAME_EXC;
+            e.printStackTrace();
+            error.set(INVALID_NAME_EXC);
         } catch (CommunicationException e) {
-            error = INVALID_COMMUNICATION_EXC;
+            e.printStackTrace();
+            error.set(INVALID_COMMUNICATION_EXC);
 
         } catch (NameNotFoundException e) {
-            error = NAME_NOT_FOUND_EXC;
+            e.printStackTrace();
+            error.set(NAME_NOT_FOUND_EXC);
         } catch (NotBoundException e) {
-            error = NOT_BOUND_EXC;
+            e.printStackTrace();
+            error.set(NOT_BOUND_EXC);
         } catch (AlreadyBoundException e) {
-            error = ALREADY_BOUND_EXC;
+            e.printStackTrace();
+            error.set(ALREADY_BOUND_EXC);
         } catch (IOException e) {
-            error = SQL_EXC;
+            e.printStackTrace();
+            error.set(SQL_EXC);
         } catch (SQLException e) {
-            error = SQL_EXC;
+            e.printStackTrace();
+            error.set(SQL_EXC);
         } catch (UnAuthenticatedUserException e) {
-            error = UNAUTH_USER_EXC;
+            e.printStackTrace();
+            error.set(UNAUTH_USER_EXC);
         } catch (NamingException e) {
-            error = NAMING_EXC;
+            e.printStackTrace();
+            error.set(NAMING_EXC);
         } catch (Exception e) {
-            error = EXCEPTION;
+            e.printStackTrace();
+            error.set(EXCEPTION);
         }
         return null;
     }
@@ -342,16 +366,22 @@ public class DndServiceImpl implements DndService {
             client = null;
             return OP_SUCCESS;
         } catch (RemoteException e) {
+            e.printStackTrace();
             return REMOTE_EXC;
         } catch (SQLException e) {
+            e.printStackTrace();
             return SQL_EXC;
         } catch (IOException e) {
+            e.printStackTrace();
             return IO_EXC;
         } catch (NotBoundException e) {
+            e.printStackTrace();
             return NOT_BOUND_EXC;
         } catch (NullPointerException e) {
+            e.printStackTrace();
             return NULL_PTR_EXC;
         } catch (Exception e) {
+            e.printStackTrace();
             return EXCEPTION;
         }
     }
@@ -368,7 +398,7 @@ public class DndServiceImpl implements DndService {
             }
             return new String(Bytes2, "Cp1256");
         } catch (java.io.UnsupportedEncodingException e) {
-            JOptionPane.showMessageDialog(null, "UnsupportedEncodingException");
+            e.printStackTrace();
             return "";
         }
     }
