@@ -174,7 +174,7 @@ public class DndServiceImpl implements DndService {
             }
             inDocument doc = new inDocument();
             c.getDocument(docId, doc);
-            
+
             doc.setDocType(doctype);
             doc.setIndicesValues(indices);
             c.setDocumentIndicesValues(doc);
@@ -195,18 +195,79 @@ public class DndServiceImpl implements DndService {
 
     @Override
     public synchronized Long createDocument(String serverName, Integer port, String userName, String pass, String domain, Integer docTypeID, Integer parentID, String docName, String docDesc, String indicesValues, String pages) {
-        int nRet = OraFrmClient.client_LogIn(serverName, port, userName, pass, domain);
-        if (nRet == OraFrmClient.CLIENT_ALREADY_LOGGED_IN) {
-            OraFrmClient.client_LogOut();
-            nRet = OraFrmClient.client_LogIn(serverName, port, userName, pass, domain);
-        }
+        inClient c = null;
+        Integer nRet = 0;
+        c = logIn(serverName, port, userName, pass, domain, nRet);
         if (nRet <= 0) {
             return new Long(nRet);
         }
 
-        Long pagesCount = OraFrmClient.createDocument(docTypeID, parentID, docName, docDesc, indicesValues, pages);
-        OraFrmClient.client_LogOut();
-        return pagesCount;
+        if (nRet <= 0) {
+            return new Long(nRet);
+        }
+
+        try {
+            indicesValues = convertToCp(indicesValues);
+
+            if ((indicesValues == null) || (indicesValues.trim().equals(""))) {
+                return new Long(INVALID_INDICES);
+            }
+
+            Vector<inDocumentType> v = new Vector<inDocumentType>();
+            c.getDocumentTypes(v);
+            if (v.size() == 0) {
+                return new Long(NO_DOC_TYPES);
+            }
+            inDocumentType doctype = null;
+            for (inDocumentType inDocTp : v) {
+                if (inDocTp.getID() == docTypeID) {
+                    doctype = inDocTp;
+                    break;
+                }
+            }
+            if (doctype == null) {
+                return new Long(DOC_TYPE_NOT_FOUND);
+            }
+
+            c.getDocTypeIndices(doctype);
+            Vector<inIndex> indices = doctype.getIndices();
+            if ((indices == null) || (indices.size() == 0)) {
+                return new Long(INVALID_INDICES);
+            }
+            String[] indValsArray = indicesValues.split("\t");
+            if (indices.size() != indValsArray.length) {
+                return new Long(INVLID_INDICES_COUNT);
+            }
+            int i = 0;
+            for (Iterator iterator = indices.iterator(); iterator.hasNext();) {
+                inIndex name = (inIndex) iterator.next();
+                name.setValue(indValsArray[i]);
+                i++;
+            }
+            
+            inDocument doc = new inDocument();
+            doc.setName(docName);
+            doc.setParentID(parentID);
+            doc.setDescription(docDesc);
+            doc.setIsCompressed(false);
+            doc.setIsCompressed(false);
+            doc.setSaveMethod(1); // MEDIA SAVE METHOD
+            
+            doc.setDocType(doctype);
+            doc.setIndicesValues(indices);
+            return c.createDocument(doc);
+
+        } catch (RemoteException e) {
+            return new Long(REMOTE_EXC);
+        } catch (SQLException e) {
+            return new Long(SQL_EXC);
+        } catch (DataBaseIsDisconnectedException e) {
+            return new Long(DB_IS_DISCONNECTED_EXC);
+        } catch (RuntimeException e) {
+            return new Long(SQL_EXC);
+        }finally{
+            logOut(c);
+        }
     }
 
     @Override
