@@ -34,8 +34,10 @@ import com.invest4all.incommon.DocInfo;
 import com.invest4all.incommon.inDocument;
 import com.invest4all.incommon.inDocumentType;
 import com.invest4all.incommon.inIndex;
+import com.invest4all.incommon.inPage;
 import com.invest4all.security.UnAuthenticatedUserException;
 import com.invest4all.server.DataBaseIsDisconnectedException;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.channels.AlreadyBoundException;
@@ -45,8 +47,6 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.jws.WebService;
 import javax.management.InvalidAttributeValueException;
 import javax.naming.CommunicationException;
@@ -63,14 +63,14 @@ import javax.security.sasl.AuthenticationException;
 @WebService(endpointInterface = "com.mis.irondndwebservice.DndService")
 public class DndServiceImpl implements DndService {
 
-    static String TEMP_DIR = System.getProperty("java.io.tmpdir");
+    static String TEMP_DIR = System.getProperty("java.io.tmpdir") + "\\DND\\";
 
     @Override
     public synchronized String checkCall(String input) {
-        return "Time on server:" + (new java.util.Date()) + "\n </br>" + "Your input: " + input
-                + "\n </br> OS current temporary directory is " + TEMP_DIR
-                + "\n </br>Possible Error Codes \n </br>"
-                + "public static final int CLIENT_ALREADY_LOGGED_IN = -99;\n"
+        return "Time on server:" + (new java.util.Date()) + " \n  " + "Your input: " + input
+                + "\n  OS current temporary directory is " + TEMP_DIR
+                + "\n Possible Error Codes    "
+                + "\n public static final int CLIENT_ALREADY_LOGGED_IN = -99;\n"
                 + "	public static final int AUTHENTICATION_EXC = -100;\n"
                 + "	public static final int REMOTE_EXC = -101;\n"
                 + "	public static final int MALFORMED_URL_EXC = -102; \n"
@@ -309,9 +309,14 @@ public class DndServiceImpl implements DndService {
             c.getDocument(docId, doc);
 
             String sDocPath = TEMP_DIR + '\\' + serverName.replaceAll("[\\\\/:*?\"<>|]/", "_") + '\\' + docId + '\\';
+            (new File(sDocPath)).mkdirs();
             System.out.println("Document(" + docId + ") path=" + sDocPath);
             //sDocPath.Format(_T("%s\\%d\\%d\\"), theApp.TEMP_FOLDER, server_id, doc_id);
             c.getDocumentPages(doc, sDocPath);
+            for(inPage page:doc.getPages()){
+                c.DownloadPage(doc, page, 1, sDocPath);
+                c.DownloadPage(doc, page, 2, sDocPath);
+            }
             return 1;
 
         } catch (Exception e) {
