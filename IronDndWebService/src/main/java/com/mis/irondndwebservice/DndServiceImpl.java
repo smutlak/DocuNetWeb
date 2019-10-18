@@ -67,34 +67,34 @@ public class DndServiceImpl implements DndService {
 
     @Override
     public synchronized String checkCall(String input) {
-        return "Time on server:" + (new java.util.Date()) + " \n  " + "Your input: " + input
-                + "\n  OS current temporary directory is " + TEMP_DIR
-                + "\n Possible Error Codes    "
-                + "\n public static final int CLIENT_ALREADY_LOGGED_IN = -99;\n"
-                + "	public static final int AUTHENTICATION_EXC = -100;\n"
-                + "	public static final int REMOTE_EXC = -101;\n"
-                + "	public static final int MALFORMED_URL_EXC = -102; \n"
-                + "	public static final int INVALID_SEARCH_EXC = -103;\n"
-                + "	public static final int INVALID_ATTR_VAL_EXC = -104;\n"
-                + "	public static final int INVALID_NAME_EXC = -105;\n"
-                + "	public static final int INVALID_COMMUNICATION_EXC = -106;\n"
-                + "	public static final int NAME_NOT_FOUND_EXC = -107;\n"
-                + "	public static final int NOT_BOUND_EXC = -108;\n"
-                + "	public static final int ALREADY_BOUND_EXC = -109;\n"
-                + "	public static final int IO_EXC = -110;\n"
-                + "	public static final int SQL_EXC = -111;\n"
-                + "	public static final int UNAUTH_USER_EXC = -112;\n"
-                + "	public static final int NAMING_EXC = -113;\n"
-                + "	public static final int EXCEPTION = -114;\n"
-                + "	public static final int NO_DOC_TYPES = -115;\n"
-                + "	public static final int DOC_TYPE_NOT_FOUND = -116;\n"
-                + "	public static final int INVALID_INDICES = -117;\n"
-                + "	public static final int DB_IS_DISCONNECTED_EXC = -118;\n"
-                + "	public static final int OP_SUCCESS = 0;\n"
-                + "	public static final int INVALID_USERNAME_PASS = -120;\n"
-                + "	public static final int SERVER_NOT_FOUND = -121;\n"
-                + "	public static final int INVLID_INDICES_COUNT = -122;\n"
-                + "	public static final int NULL_PTR_EXC = -123;";
+        return "Time on server:" + (new java.util.Date()) + "   " + "Your input: " + input
+                + "     OS current temporary directory is    " + TEMP_DIR
+                + "     Possible Error Codes    "
+                + "     public static final int CLIENT_ALREADY_LOGGED_IN = -99;     "
+                + "     public static final int AUTHENTICATION_EXC = -100;  "
+                + "     public static final int REMOTE_EXC = -101;  "
+                + "     public static final int MALFORMED_URL_EXC = -102;   "
+                + "     public static final int INVALID_SEARCH_EXC = -103;  "
+                + "     public static final int INVALID_ATTR_VAL_EXC = -104;    "
+                + "     public static final int INVALID_NAME_EXC = -105;    "
+                + "     public static final int INVALID_COMMUNICATION_EXC = -106;   "
+                + "     public static final int NAME_NOT_FOUND_EXC = -107;  "
+                + "     public static final int NOT_BOUND_EXC = -108;   "
+                + "     public static final int ALREADY_BOUND_EXC = -109;   "
+                + "     public static final int IO_EXC = -110;  "
+                + "     public static final int SQL_EXC = -111;     "
+                + "     public static final int UNAUTH_USER_EXC = -112;     "
+                + "     public static final int NAMING_EXC = -113;  "
+                + "     public static final int EXCEPTION = -114;   "
+                + "     public static final int NO_DOC_TYPES = -115;    "
+                + "     public static final int DOC_TYPE_NOT_FOUND = -116;  "
+                + "     public static final int INVALID_INDICES = -117;     "
+                + "     public static final int DB_IS_DISCONNECTED_EXC = -118;  "
+                + "     public static final int OP_SUCCESS = 0;     "
+                + "     public static final int INVALID_USERNAME_PASS = -120;   "
+                + "     public static final int SERVER_NOT_FOUND = -121;    "
+                + "     public static final int INVLID_INDICES_COUNT = -122;    "
+                + "     public static final int NULL_PTR_EXC = -123;";
     }
 
     @Override
