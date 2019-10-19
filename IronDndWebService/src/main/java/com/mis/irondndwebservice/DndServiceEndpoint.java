@@ -33,7 +33,7 @@ public class DndServiceEndpoint {
         }
         Endpoint endPoint = Endpoint.create(new DndServiceImpl());
         System.out.println("DND client service(single connection) is listening on port:" + port);
-        endPoint.publish("http://127.0.0.1:" + port + "/DndService");
+        endPoint.publish("http://0.0.0.0:" + port + "/DndService");
     }
 
     public static void deleteRecursive(File path) {

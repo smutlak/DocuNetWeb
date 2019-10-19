@@ -1,1 +1,1 @@
-"C:\Program Files\Java\jdk1.8.0_111\jre\bin\java" -Djava.security.policy=archServer.policy -jar IronDndWebService-1.1.1.1.jar
+"C:\DocuNetDMS\jre8111\bin\java" -Djava.security.policy=C:\DocuNetDMS\archServer.policy -jar C:\DocuNetDMS\IronDndWebService-1.1.1.1.jar
