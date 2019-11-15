@@ -99,6 +99,7 @@ public class DndServiceImpl implements DndService {
 
     @Override
     public synchronized Long getDocumentPagesCount(String serverName, Integer port, String userName, String pass, String domain, Long docId) {
+        System.out.println("Starting getDocumentPagesCount..serverName=" + serverName + " port=" + port + " userName" + userName + " pass=" + pass + " domain=" + domain + " docId=" + docId);
         inClient c = null;
         AtomicInteger nRet = new AtomicInteger(0);
         c = logIn(serverName, port, userName, pass, domain, nRet);
@@ -313,7 +314,7 @@ public class DndServiceImpl implements DndService {
             System.out.println("Document(" + docId + ") path=" + sDocPath);
             //sDocPath.Format(_T("%s\\%d\\%d\\"), theApp.TEMP_FOLDER, server_id, doc_id);
             c.getDocumentPages(doc, sDocPath);
-            for(inPage page:doc.getPages()){
+            for (inPage page : doc.getPages()) {
                 c.DownloadPage(doc, page, 1, sDocPath);
                 c.DownloadPage(doc, page, 2, sDocPath);
             }
@@ -328,11 +329,13 @@ public class DndServiceImpl implements DndService {
     }
 
     private inClient logIn(String serverName, int port, String userName, String pass, String domain, AtomicInteger error) {
+        System.out.println("Starting login..serverName=" + serverName + " port=" + port + " userName" + userName + " pass=" + pass + " domain=" + domain);
         try {
             String tmp_pass = "";
             if (pass != null) {
-
-                tmp_pass = pass;
+                if (pass.trim().length() > 0 && !pass.equalsIgnoreCase("null")) {
+                    tmp_pass = pass;
+                }
             }
             inClient c = null;
             c = new inClient(serverName, port, userName, tmp_pass, domain);
@@ -400,6 +403,7 @@ public class DndServiceImpl implements DndService {
             e.printStackTrace();
             error.set(EXCEPTION);
         }
+        System.out.println("Ending login..");
         return null;
     }
 
@@ -430,19 +434,20 @@ public class DndServiceImpl implements DndService {
     }
 
     private static String convertToCp(String sText) {
-        try {
-            byte[] Bytes = sText.getBytes("UTF16");
-            byte[] Bytes2 = new byte[(Bytes.length - 2) / 2];
-            int j = 0;
-            for (int i = 2; i < Bytes.length; i++) {
-                if (Bytes[i] != 0) {
-                    Bytes2[j++] = Bytes[i];
-                }
-            }
-            return new String(Bytes2, "Cp1256");
-        } catch (java.io.UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return "";
-        }
+//        try {
+//            byte[] Bytes = sText.getBytes("UTF16");
+//            byte[] Bytes2 = new byte[(Bytes.length - 2) / 2];
+//            int j = 0;
+//            for (int i = 2; i < Bytes.length; i++) {
+//                if (Bytes[i] != 0) {
+//                    Bytes2[j++] = Bytes[i];
+//                }
+//            }
+//            return new String(Bytes2, "Cp1256");
+//        } catch (java.io.UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//            return "";
+//        }
+        return sText;
     }
 }
