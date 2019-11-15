@@ -6,12 +6,16 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import org.primefaces.event.ResizeEvent;
 import org.primefaces.extensions.event.ImageAreaSelectEvent;
 import org.primefaces.extensions.event.RotateEvent;
@@ -27,13 +31,24 @@ import org.primefaces.model.StreamedContent;
 public class DocumentController implements Serializable {
 
     private static final long serialVersionUID = 20111021L;
-    
-    String docPath = "D:/temp/4242521";
+
+    //String docPath = "D:/temp/4242521";
+    //String TEMP_DIR = System.getProperty("java.io.tmpdir") + "\\DND\\";
+    static String DOCUNET_DOCUMENTS_PATH = "D:/temp/4242521";
     private List<String> pages;
     private Integer currIndex;
     private Boolean lastPage;
     private Boolean firstPage;
     private String pageFrom;
+
+    static {
+        try {
+            DOCUNET_DOCUMENTS_PATH = (String) (new InitialContext().lookup("java:comp/env/DOCUNET_DOCUMENTS_PATH"));
+        } catch (NamingException ex) {
+            Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE,
+                    "Exception caught", ex);
+        }
+    }
 
     public DocumentController() {
         currIndex = 0;
@@ -55,7 +70,7 @@ public class DocumentController implements Serializable {
     public List<String> getPages() {
 
         pages = new ArrayList();
-        File file = new File(docPath);
+        File file = new File(DOCUNET_DOCUMENTS_PATH+File.separator+"4242521");
         if (file.exists()) {
             for (File p : file.listFiles()) {
                 if (!p.getName().endsWith("thb")) {
