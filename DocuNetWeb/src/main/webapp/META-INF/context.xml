@@ -1,2 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context antiJARLocking="true" path="/DocuNetWeb"/>
+<Context antiJARLocking="true" path="/DocuNetWeb">
+    <ResourceLink global="DOCUNET_DOCUMENTS_PATH" name="DOCUNET_DOCUMENTS_PATH" type="java.lang.String"/>
+</Context>
