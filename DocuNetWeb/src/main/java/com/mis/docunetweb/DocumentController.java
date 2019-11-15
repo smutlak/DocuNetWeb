@@ -186,7 +186,7 @@ public class DocumentController implements Serializable {
     }
 
     public void setDndID(String dndID) {
-        if(this.dndID != null){
+        if(this.dndID != null && !dndID.equalsIgnoreCase(this.dndID)){
             File oldDocumentPath = new File(DOCUNET_DOCUMENTS_PATH + File.separator + this.dndID);
             if(oldDocumentPath.exists()){
                 deleteRecursive(oldDocumentPath);
