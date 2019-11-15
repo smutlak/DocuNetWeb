@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mis.docunetweb;
 
 import java.io.File;
@@ -32,10 +27,7 @@ import org.primefaces.model.StreamedContent;
 public class DocumentController implements Serializable {
 
     private static final long serialVersionUID = 20111021L;
-    /**
-     * Creates a new instance of DocumentController
-     */
-    //String docPath = "C:\\Users\\smutlak\\AppData\\Local\\Temp\\DND\\192.168.1.210\\4242521";
+    
     String docPath = "D:/temp/4242521";
     private List<String> pages;
     private Integer currIndex;
@@ -110,10 +102,6 @@ public class DocumentController implements Serializable {
         this.currIndex = currIndex;
     }
 
-//    public String getCurrPage() {
-//        this.getPages();
-//        return pages.get(currIndex);
-//    }
     public StreamedContent getCurrPage() throws IOException {
         this.getPages();
         FacesContext context = FacesContext.getCurrentInstance();
@@ -172,7 +160,4 @@ public class DocumentController implements Serializable {
     public void setPageFrom(String pageFrom) {
         this.pageFrom = pageFrom;
     }
-    
-    
-
 }
