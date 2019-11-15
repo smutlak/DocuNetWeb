@@ -187,7 +187,7 @@ public class DocumentController implements Serializable {
 
     public void setDndID(String dndID) {
         if(this.dndID != null){
-            File oldDocumentPath = new File(DOCUNET_DOCUMENTS_PATH + File.separator + dndID);
+            File oldDocumentPath = new File(DOCUNET_DOCUMENTS_PATH + File.separator + this.dndID);
             if(oldDocumentPath.exists()){
                 deleteRecursive(oldDocumentPath);
             }
@@ -203,7 +203,7 @@ public class DocumentController implements Serializable {
         return !this.getPages().isEmpty();
     }
     
-    private static void deleteRecursive(File path) {
+    private void deleteRecursive(File path) {
         File[] c = path.listFiles();
         Logger.getLogger(DocumentController.class.getName()).log(Level.INFO,
                     "DocuNetWeb deleteRecursive", "Cleaning out folder:" + path.toString());
