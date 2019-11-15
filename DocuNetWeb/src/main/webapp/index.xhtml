@@ -13,10 +13,16 @@
             height: 85vh; /* vh stands for view-port height, 1vh is 1% of screen height */
         }
     </style>
+    <f:metadata>
+        <f:viewParam name="dndID" value="#{documentController.dndID}"/>
+    </f:metadata>
     <h:body>
         MIS DocuNet Web Portal
         <h:form>
-            <p:outputPanel id="example">  
+            <p:outputPanel id="empty" rendered="#{!documentController.hasPages()}">  
+                <h1>NO VALID PAGES</h1>
+            </p:outputPanel>
+            <p:outputPanel id="dndViewer" rendered="#{documentController.hasPages()}">  
                 <p:growl id="growl" showDetail="true" sticky="true" />  
 
                 <div id="imageWrapper" style="width:100%; margin:auto; overflow:scroll; position:relative;">  
@@ -51,10 +57,10 @@
                 <p:commandButton icon="ui-icon-zoomout" value="Scale -"  
                                  onclick="PF('rotateAndResizeWidget').scale(0.95);return false;"/>  
                 <p:commandButton actionListener="#{documentController.prevPage()}" icon="ui-icon-zoomout" value="Previous Page"  
-                                 update="example" disabled="#{documentController.firstPage}" />  
+                                 update="dndViewer" disabled="#{documentController.firstPage}" />  
                 <p:outputLabel value="#{documentController.pageFrom}"></p:outputLabel>
                 <p:commandButton actionListener="#{documentController.nextPage}"  icon="ui-icon-zoomout" value="Next Page"
-                                 update="example" disabled="#{documentController.lastPage}"/>  
+                                 update="dndViewer" disabled="#{documentController.lastPage}"/>  
             </p:outputPanel>  
         </h:form>
     </h:body>

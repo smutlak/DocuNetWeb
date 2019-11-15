@@ -35,6 +35,7 @@ public class DocumentController implements Serializable {
     //String docPath = "D:/temp/4242521";
     //String TEMP_DIR = System.getProperty("java.io.tmpdir") + "\\DND\\";
     static String DOCUNET_DOCUMENTS_PATH = "D:/temp/4242521";
+    private String dndID;
     private List<String> pages;
     private Integer currIndex;
     private Boolean lastPage;
@@ -70,7 +71,7 @@ public class DocumentController implements Serializable {
     public List<String> getPages() {
 
         pages = new ArrayList();
-        File file = new File(DOCUNET_DOCUMENTS_PATH+File.separator+"4242521");
+        File file = new File(DOCUNET_DOCUMENTS_PATH + File.separator + dndID);
         if (file.exists()) {
             for (File p : file.listFiles()) {
                 if (!p.getName().endsWith("thb")) {
@@ -127,7 +128,11 @@ public class DocumentController implements Serializable {
         } else {
             // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
             //String filename = context.getExternalContext().getRequestParameterMap().get("filename");
-            return new DefaultStreamedContent(new FileInputStream(new File(this.getPages().get(currIndex))));
+            if (this.getPages() == null || currIndex >= this.getPages().size()) {
+                return new DefaultStreamedContent();
+            } else {
+                return new DefaultStreamedContent(new FileInputStream(new File(this.getPages().get(currIndex))));
+            }
         }
     }
 
@@ -174,5 +179,20 @@ public class DocumentController implements Serializable {
 
     public void setPageFrom(String pageFrom) {
         this.pageFrom = pageFrom;
+    }
+
+    public String getDndID() {
+        return dndID;
+    }
+
+    public void setDndID(String dndID) {
+        this.dndID = dndID;
+        pages = new ArrayList();
+        currIndex = 0;
+        
+    }
+
+    public Boolean hasPages(){
+        return !this.getPages().isEmpty();
     }
 }
