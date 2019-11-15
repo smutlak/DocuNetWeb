@@ -15,6 +15,8 @@
     </style>
     <f:metadata>
         <f:viewParam name="dndID" value="#{documentController.dndID}"/>
+        <f:viewParam name="p" value="#{documentController.enablePrinting}"/>
+        <f:viewParam name="name" value="#{documentController.perName}"/>
     </f:metadata>
     <h:body>
         MIS DocuNet Web Portal
@@ -60,7 +62,12 @@
                                  update="dndViewer" disabled="#{documentController.firstPage}" />  
                 <p:outputLabel value="#{documentController.pageFrom}"></p:outputLabel>
                 <p:commandButton actionListener="#{documentController.nextPage}"  icon="ui-icon-zoomout" value="Next Page"
-                                 update="dndViewer" disabled="#{documentController.lastPage}"/>  
+                                 update="dndViewer" disabled="#{documentController.lastPage}"/> 
+                <h:panelGroup style="min-width:100%;text-align: right;">
+                    <p:commandButton value="Print" type="button" icon="pi pi-print">
+                        <p:printer target="myImage" />
+                    </p:commandButton>
+                </h:panelGroup>
             </p:outputPanel>  
         </h:form>
     </h:body>

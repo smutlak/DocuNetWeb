@@ -36,6 +36,8 @@ public class DocumentController implements Serializable {
     //String TEMP_DIR = System.getProperty("java.io.tmpdir") + "\\DND\\";
     static String DOCUNET_DOCUMENTS_PATH = "D:/temp/4242521";
     private String dndID;
+    private String enablePrinting;
+    private String perName;
     private List<String> pages;
     private Integer currIndex;
     private Boolean lastPage;
@@ -221,4 +223,23 @@ public class DocumentController implements Serializable {
         }
         path.delete();
     }
+
+    public String getEnablePrinting() {
+        return enablePrinting;
+    }
+
+    public void setEnablePrinting(String enablePrinting) {
+        this.enablePrinting = enablePrinting;
+    }
+
+    public String getPerName() {
+        return perName;
+    }
+
+    public void setPerName(String perName) {
+        this.perName = perName;
+    }
+    
+    
+    
 }
