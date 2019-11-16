@@ -188,12 +188,12 @@ public class DocumentController implements Serializable {
     }
 
     public void setDndID(String dndID) {
-        if(this.dndID != null && !dndID.equalsIgnoreCase(this.dndID)){
-            File oldDocumentPath = new File(DOCUNET_DOCUMENTS_PATH + File.separator + this.dndID);
-            if(oldDocumentPath.exists()){
-                deleteRecursive(oldDocumentPath);
-            }
-        }
+//        if(this.dndID != null && !dndID.equalsIgnoreCase(this.dndID)){
+//            File oldDocumentPath = new File(DOCUNET_DOCUMENTS_PATH + File.separator + this.dndID);
+//            if(oldDocumentPath.exists()){
+//                deleteRecursive(oldDocumentPath);
+//            }
+//        }
         
         this.dndID = dndID;
         pages = new ArrayList();
@@ -205,22 +205,22 @@ public class DocumentController implements Serializable {
         return !this.getPages().isEmpty();
     }
     
-    private void deleteRecursive(File path) {
-        File[] c = path.listFiles();
-        Logger.getLogger(DocumentController.class.getName()).log(Level.INFO,
-                    "DocuNetWeb deleteRecursive", "Cleaning out folder:" + path.toString());
-        System.out.println("Cleaning out folder:" + path.toString());
-        for (File file : c) {
-            if (file.isDirectory()) {
-                Logger.getLogger(DocumentController.class.getName()).log(Level.INFO,
-                    "DocuNetWeb deleteRecursive", "Deleting file:" + file.toString());
-                System.out.println("Deleting file:" + file.toString());
-                deleteRecursive(file);
-                file.delete();
-            } else {
-                file.delete();
-            }
-        }
-        path.delete();
-    }
+//    private void deleteRecursive(File path) {
+//        File[] c = path.listFiles();
+//        Logger.getLogger(DocumentController.class.getName()).log(Level.INFO,
+//                    "DocuNetWeb deleteRecursive", "Cleaning out folder:" + path.toString());
+//        System.out.println("Cleaning out folder:" + path.toString());
+//        for (File file : c) {
+//            if (file.isDirectory()) {
+//                Logger.getLogger(DocumentController.class.getName()).log(Level.INFO,
+//                    "DocuNetWeb deleteRecursive", "Deleting file:" + file.toString());
+//                System.out.println("Deleting file:" + file.toString());
+//                deleteRecursive(file);
+//                file.delete();
+//            } else {
+//                file.delete();
+//            }
+//        }
+//        path.delete();
+//    }
 }
