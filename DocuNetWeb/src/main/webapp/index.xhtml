@@ -7,32 +7,36 @@
       xmlns:pe="http://primefaces.org/ui/extensions" >
     <h:head>
         <title>MIS DocuNet Web Portal</title>
+        <style>
+            #imageWrapper {
+                height: 89vh; /* vh stands for view-port height, 1vh is 1% of screen height */
+                
+            }
+            body{
+                font-size: small;
+            }
+            .col1{
+                width:40%;
+            }
+            .col2{
+                width:20%;
+            }
+            .col3{
+                width:20%;
+            }
+            .col4{
+                width:20%;
+            }
+        </style>
     </h:head>
-    <style>
-        #imageWrapper {
-            height: 89vh; /* vh stands for view-port height, 1vh is 1% of screen height */
-        }
-        body{
-            font-size: small;
-        }
-        .col1{
-            width:40%;
-        }
-        .col2{
-            width:20%;
-        }
-        .col3{
-            width:20%;
-        }
-        .col4{
-            width:20%;
-        }
-    </style>
+
     <f:metadata>
         <f:viewParam name="dndID" value="#{documentController.dndID}"/>
     </f:metadata>
     <h:body>
         <h:form>
+            <p:ajaxStatus onstart="document.getElementById('loaderAjax').style.display='';" onsuccess="document.getElementById('loaderAjax').style.display='none'" />
+            <p:graphicImage name="/images/ajax-loading-large.gif" style="display: none;  width:150px;height:150px; position: absolute;top: 75%;left: 90%; z-index: 55" id="loaderAjax" />
             <p:outputPanel id="empty" rendered="#{!documentController.hasPages()}">  
                 <h1>NO VALID PAGES</h1>
             </p:outputPanel>
@@ -56,9 +60,9 @@
                         <p:commandButton actionListener="#{documentController.prevPage()}" value="الصفحة السايقة"  
                                          update="dndViewer" disabled="#{documentController.firstPage}" />  
                         <p:outputLabel value="#{documentController.pageFrom}"></p:outputLabel>
-                        <p:commandButton actionListener="#{documentController.nextPage()}" value="الصفحة اللاحقة"
-                                         update="dndViewer" disabled="#{documentController.lastPage}"/> 
-                        <p:commandButton actionListener="#{documentController.lastPage()}" value="الصفحة الاخيرة"
+                        <p:commandButton ajax="true" actionListener="#{documentController.nextPage}" value="الصفحة اللاحقة"
+                                         update="dndViewer" disabled="#{documentController.lastPage}" /> 
+                        <p:commandButton ajax="true" actionListener="#{documentController.lastPage()}" value="الصفحة الاخيرة"
                                          update="dndViewer" disabled="#{documentController.lastPage}"/> 
                     </h:panelGrid>
                     <h:panelGrid columns="2">
@@ -76,7 +80,7 @@
                                          onclick="PF('rotateAndResizeWidget').scale(0.95);return false;"/> 
                     </h:panelGrid>
 
-                    
+
                     <h:panelGroup style="text-align: right;">
                         <p:commandButton value="طباعة الصفحة" type="button" icon="pi pi-print">
                             <p:printer target="myImage" />
