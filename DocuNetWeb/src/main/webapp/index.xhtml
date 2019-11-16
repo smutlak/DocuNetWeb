@@ -34,8 +34,7 @@
         <f:viewParam name="dndID" value="#{documentController.dndID}"/>
     </f:metadata>
     <h:body>
-        <p:graphicImage id="loaderAjax" name="/images/ajax-loading-large.gif" style="display:none; width:150px;height:150px; position: absolute;top: 75%;left: 90%; z-index: 55" />
-            <p:ajaxStatus onstart="document.getElementById('loaderAjax').style.display='';" onsuccess="document.getElementById('loaderAjax').style.display='none'" />
+       
         <h:form>
             <p:outputPanel id="empty" rendered="#{!documentController.hasPages()}">  
                 <h1>NO VALID PAGES</h1>
@@ -52,7 +51,10 @@
                     <p:ajax event="rotate" listener="#{documentController.rotateListener}"  
                             update="growl" />  
                     <pe:javascript event="resize"/>  
-                </pe:imageRotateAndResize>  
+                </pe:imageRotateAndResize> 
+                
+                <p:graphicImage id="loaderAjax" name="/images/ajax-load.gif" style="width:100%;height:20px;" />
+                
                 <h:panelGrid columns="4" style="width:100%" >
                     <h:panelGrid columns="5">
                         <p:commandButton actionListener="#{documentController.firstPage()}" value="الصفحة الاولى"  
