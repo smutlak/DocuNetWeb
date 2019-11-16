@@ -12,8 +12,20 @@
         #imageWrapper {
             height: 89vh; /* vh stands for view-port height, 1vh is 1% of screen height */
         }
-        #buttonsSpan{
-            width:50px  ;
+        body{
+            font-size: small;
+        }
+        .col1{
+            width:40%;
+        }
+        .col2{
+            width:20%;
+        }
+        .col3{
+            width:20%;
+        }
+        .col4{
+            width:20%;
         }
     </style>
     <f:metadata>
@@ -32,24 +44,12 @@
                     </p:graphicImage>
                 </div>
 
-                <pe:imageAreaSelect id="areaSelect"  
-                                    for="myImage"  
-                                    widgetVar="areaSelectWidget"  
-                                    autoHide="true"  
-                                    handles="false"  
-                                    movable="false"  
-                                    persistent="false"  
-                                    resizable="false"  
-                                    parentSelector="#imageWrapper">  
-                    <p:ajax event="selectEnd" listener="#{documentController.selectEndListener}" update="growl"/>  
-                </pe:imageAreaSelect>  
-
                 <pe:imageRotateAndResize id="rotateAndResize" for="myImage" widgetVar="rotateAndResizeWidget">  
                     <p:ajax event="rotate" listener="#{documentController.rotateListener}"  
-                            update="growl" oncomplete="PF('areaSelectWidget').reload();"/>  
-                    <pe:javascript event="resize" execute="PF('areaSelectWidget').reload();"/>  
+                            update="growl" />  
+                    <pe:javascript event="resize"/>  
                 </pe:imageRotateAndResize>  
-                <h:panelGrid columns="4" style="width:100%">
+                <h:panelGrid columns="4" style="width:100%" >
                     <h:panelGrid columns="5">
                         <p:commandButton actionListener="#{documentController.firstPage()}" value="الصفحة الاولى"  
                                          update="dndViewer" disabled="#{documentController.firstPage}" />
@@ -67,7 +67,9 @@
                         <p:commandButton value="تدوير لليمين"  
                                          onclick="PF('rotateAndResizeWidget').rotateRight(90);return false;"/>  
                     </h:panelGrid>
-                    <h:panelGrid columns="2">
+                    <h:panelGrid columns="3">
+                        <p:commandButton value="القياس النظامي"  
+                                         onclick="PF('rotateAndResizeWidget').restoreDefaults();return false;"/>
                         <p:commandButton value="تكبير"  
                                          onclick="PF('rotateAndResizeWidget').scale(1.05);return false;"/>  
                         <p:commandButton value="تصغير"  
@@ -75,7 +77,7 @@
                     </h:panelGrid>
 
                     
-                    <h:panelGroup style="min-width:100%;text-align: right;">
+                    <h:panelGroup style="text-align: right;">
                         <p:commandButton value="طباعة الصفحة" type="button" icon="pi pi-print">
                             <p:printer target="myImage" />
                         </p:commandButton>
