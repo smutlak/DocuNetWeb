@@ -153,7 +153,7 @@ public class DocumentController implements Serializable {
         updateFlags();
     }
     public void lastPage() {
-        this.currIndex=this.pages.size();
+        this.currIndex=this.pages.size()-1;
         updateFlags();
     }
 
