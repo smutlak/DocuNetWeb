@@ -9,23 +9,11 @@
         <title>MIS DocuNet Web Portal</title>
         <style>
             #imageWrapper {
-                height: 89vh; /* vh stands for view-port height, 1vh is 1% of screen height */
-                
+                height: 86vh; /* vh stands for view-port height, 1vh is 1% of screen height */
+                height: 550px\9;
             }
-            body{
+            html,body{
                 font-size: small;
-            }
-            .col1{
-                width:40%;
-            }
-            .col2{
-                width:20%;
-            }
-            .col3{
-                width:20%;
-            }
-            .col4{
-                width:20%;
             }
         </style>
     </h:head>
@@ -34,8 +22,8 @@
         <f:viewParam name="dndID" value="#{documentController.dndID}"/>
     </f:metadata>
     <h:body>
-       
-        <h:form>
+        <p:ajaxStatus onstart="document.getElementById('dndViewerForm:loaderAjax').style.display='';" onsuccess="document.getElementById('dndViewerForm:loaderAjax').style.display='none'" />
+        <h:form id="dndViewerForm">
             <p:outputPanel id="empty" rendered="#{!documentController.hasPages()}">  
                 <h1>NO VALID PAGES</h1>
             </p:outputPanel>
@@ -53,8 +41,10 @@
                     <pe:javascript event="resize"/>  
                 </pe:imageRotateAndResize> 
                 
-                <p:graphicImage id="loaderAjax" name="/images/ajax-load.gif" style="width:100%;height:20px;" />
-                
+                <div style=" min-height: 20px;">
+                    <p:graphicImage id="loaderAjax" name="/images/ajax-load.gif" style=" display:none;width:100%;height:20px;" />
+                </div>
+
                 <h:panelGrid columns="4" style="width:100%" >
                     <h:panelGrid columns="5">
                         <p:commandButton actionListener="#{documentController.firstPage()}" value="الصفحة الاولى"  
