@@ -37,6 +37,7 @@ public class ImageConverter {
         en.encode(op);
         os.flush();
         InputStream is = new ByteArrayInputStream(os.toByteArray());
+        os.close();
         return is;
 
 //        final BufferedImage tif = ImageIO.read(new File(filename));
