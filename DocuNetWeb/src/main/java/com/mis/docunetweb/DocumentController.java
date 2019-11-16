@@ -223,23 +223,4 @@ public class DocumentController implements Serializable {
         }
         path.delete();
     }
-
-    public String getEnablePrinting() {
-        return enablePrinting;
-    }
-
-    public void setEnablePrinting(String enablePrinting) {
-        this.enablePrinting = enablePrinting;
-    }
-
-    public String getPerName() {
-        return perName;
-    }
-
-    public void setPerName(String perName) {
-        this.perName = perName;
-    }
-    
-    
-    
 }
