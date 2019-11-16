@@ -10,7 +10,10 @@
     </h:head>
     <style>
         #imageWrapper {
-            height: 85vh; /* vh stands for view-port height, 1vh is 1% of screen height */
+            height: 89vh; /* vh stands for view-port height, 1vh is 1% of screen height */
+        }
+        #buttonsSpan{
+            width:50px  ;
         }
     </style>
     <f:metadata>
@@ -24,7 +27,7 @@
             <p:outputPanel id="dndViewer" rendered="#{documentController.hasPages()}">  
                 <p:growl id="growl" showDetail="true" sticky="true" />  
 
-                <div id="imageWrapper" style="width:100%; max-height: 500px; margin:auto; overflow:scroll; position:relative;">  
+                <div id="imageWrapper" style="width:100%; margin:auto; overflow:scroll; position:relative;">  
                     <p:graphicImage id="myImage" style="width:100%;" value="#{documentController.currPage}" cache="false">  
                     </p:graphicImage>
                 </div>
@@ -46,25 +49,38 @@
                             update="growl" oncomplete="PF('areaSelectWidget').reload();"/>  
                     <pe:javascript event="resize" execute="PF('areaSelectWidget').reload();"/>  
                 </pe:imageRotateAndResize>  
+                <h:panelGrid columns="4" style="width:100%">
+                    <h:panelGrid columns="5">
+                        <p:commandButton actionListener="#{documentController.firstPage()}" value="الصفحة الاولى"  
+                                         update="dndViewer" disabled="#{documentController.firstPage}" />
+                        <p:commandButton actionListener="#{documentController.prevPage()}" value="الصفحة السايقة"  
+                                         update="dndViewer" disabled="#{documentController.firstPage}" />  
+                        <p:outputLabel value="#{documentController.pageFrom}"></p:outputLabel>
+                        <p:commandButton actionListener="#{documentController.nextPage()}" value="الصفحة اللاحقة"
+                                         update="dndViewer" disabled="#{documentController.lastPage}"/> 
+                        <p:commandButton actionListener="#{documentController.lastPage()}" value="الصفحة الاخيرة"
+                                         update="dndViewer" disabled="#{documentController.lastPage}"/> 
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="تدوير لليسار"  
+                                         onclick="PF('rotateAndResizeWidget').rotateLeft(90);return false;"/>  
+                        <p:commandButton value="تدوير لليمين"  
+                                         onclick="PF('rotateAndResizeWidget').rotateRight(90);return false;"/>  
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="تكبير"  
+                                         onclick="PF('rotateAndResizeWidget').scale(1.05);return false;"/>  
+                        <p:commandButton value="تصغير"  
+                                         onclick="PF('rotateAndResizeWidget').scale(0.95);return false;"/> 
+                    </h:panelGrid>
 
-                <p:commandButton icon="ui-icon-arrowreturnthick-1-w" value="Rotate Left"  
-                                 onclick="PF('rotateAndResizeWidget').rotateLeft(2);return false;"/>  
-                <p:commandButton icon="ui-icon-arrowreturnthick-1-e" value="Rotate Right"  
-                                 onclick="PF('rotateAndResizeWidget').rotateRight(2);return false;"/>  
-                <p:commandButton icon="ui-icon-zoomin" value="Scale +"  
-                                 onclick="PF('rotateAndResizeWidget').scale(1.05);return false;"/>  
-                <p:commandButton icon="ui-icon-zoomout" value="Scale -"  
-                                 onclick="PF('rotateAndResizeWidget').scale(0.95);return false;"/>  
-                <p:commandButton actionListener="#{documentController.prevPage()}" icon="ui-icon-zoomout" value="Previous Page"  
-                                 update="dndViewer" disabled="#{documentController.firstPage}" />  
-                <p:outputLabel value="#{documentController.pageFrom}"></p:outputLabel>
-                <p:commandButton actionListener="#{documentController.nextPage}"  icon="ui-icon-zoomout" value="Next Page"
-                                 update="dndViewer" disabled="#{documentController.lastPage}"/> 
-                <h:panelGroup style="min-width:100%;text-align: right;">
-                    <p:commandButton value="Print" type="button" icon="pi pi-print">
-                        <p:printer target="myImage" />
-                    </p:commandButton>
-                </h:panelGroup>
+                    
+                    <h:panelGroup style="min-width:100%;text-align: right;">
+                        <p:commandButton value="طباعة الصفحة" type="button" icon="pi pi-print">
+                            <p:printer target="myImage" />
+                        </p:commandButton>
+                    </h:panelGroup>
+                </h:panelGrid>
             </p:outputPanel>  
         </h:form>
     </h:body>
