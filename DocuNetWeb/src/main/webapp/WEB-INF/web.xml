@@ -18,6 +18,10 @@
             30
         </session-timeout>
     </session-config>
+    
+    <listener>
+        <listener-class>com.mis.docunetweb.DndWebHttpSessionListener</listener-class>
+    </listener>
     <welcome-file-list>
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>
