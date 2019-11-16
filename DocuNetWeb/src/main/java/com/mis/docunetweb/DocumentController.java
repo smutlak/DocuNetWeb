@@ -120,7 +120,7 @@ public class DocumentController implements Serializable {
         this.currIndex = currIndex;
     }
 
-    public StreamedContent getCurrPage() throws IOException {
+    public StreamedContent getCurrPage() throws IOException, Exception {
         this.getPages();
         FacesContext context = FacesContext.getCurrentInstance();
 
@@ -133,7 +133,12 @@ public class DocumentController implements Serializable {
             if (this.getPages() == null || currIndex >= this.getPages().size()) {
                 return new DefaultStreamedContent();
             } else {
-                return new DefaultStreamedContent(new FileInputStream(new File(this.getPages().get(currIndex))));
+                String fileName = this.getPages().get(currIndex);
+                if (fileName.toUpperCase().endsWith("TIF") || fileName.toUpperCase().endsWith("TIFF")) {
+                    return new DefaultStreamedContent(ImageConverter.convertTiff(fileName));
+                } else {
+                    return new DefaultStreamedContent(new FileInputStream(new File(fileName)));
+                }
             }
         }
     }
@@ -147,13 +152,14 @@ public class DocumentController implements Serializable {
         this.currIndex--;
         updateFlags();
     }
-    
+
     public void firstPage() {
-        this.currIndex=0;
+        this.currIndex = 0;
         updateFlags();
     }
+
     public void lastPage() {
-        this.currIndex=this.pages.size()-1;
+        this.currIndex = this.pages.size() - 1;
         updateFlags();
     }
 
@@ -203,17 +209,17 @@ public class DocumentController implements Serializable {
 //                deleteRecursive(oldDocumentPath);
 //            }
 //        }
-        
+
         this.dndID = dndID;
         pages = new ArrayList();
         currIndex = 0;
         this.getPages();
     }
 
-    public Boolean hasPages(){
+    public Boolean hasPages() {
         return !this.getPages().isEmpty();
     }
-    
+
 //    private void deleteRecursive(File path) {
 //        File[] c = path.listFiles();
 //        Logger.getLogger(DocumentController.class.getName()).log(Level.INFO,
