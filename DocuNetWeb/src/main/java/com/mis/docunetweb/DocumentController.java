@@ -120,27 +120,36 @@ public class DocumentController implements Serializable {
         this.currIndex = currIndex;
     }
 
-    public StreamedContent getCurrPage() throws IOException, Exception {
-        this.getPages();
-        FacesContext context = FacesContext.getCurrentInstance();
+    public StreamedContent getCurrPage() {
+        try {
+            this.getPages();
+            FacesContext context = FacesContext.getCurrentInstance();
 
-        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
-            // So, we're rendering the view. Return a stub StreamedContent so that it will generate right URL.
-            return new DefaultStreamedContent();
-        } else {
-            // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
-            //String filename = context.getExternalContext().getRequestParameterMap().get("filename");
-            if (this.getPages() == null || currIndex >= this.getPages().size()) {
+            if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+                // So, we're rendering the view. Return a stub StreamedContent so that it will generate right URL.
                 return new DefaultStreamedContent();
             } else {
-                String fileName = this.getPages().get(currIndex);
-                if (fileName.toUpperCase().endsWith("TIF") || fileName.toUpperCase().endsWith("TIFF")) {
-                    return new DefaultStreamedContent(ImageConverter.convertTiff(fileName));
+                // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
+                //String filename = context.getExternalContext().getRequestParameterMap().get("filename");
+                if (this.getPages() == null || currIndex >= this.getPages().size()) {
+                    return new DefaultStreamedContent();
                 } else {
-                    return new DefaultStreamedContent(new FileInputStream(new File(fileName)));
+                    String fileName = this.getPages().get(currIndex);
+                    if (fileName.toUpperCase().endsWith("TIF") || fileName.toUpperCase().endsWith("TIFF")) {
+                        return new DefaultStreamedContent(ImageConverter.convertTiff(fileName));
+                    } else {
+                        return new DefaultStreamedContent(new FileInputStream(new File(fileName)));
+                    }
                 }
             }
+        } catch (IOException e) {
+            Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE,
+                    "Exception caught in getCurrPage", e);
+        } catch (Exception e) {
+            Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE,
+                    "Exception caught in getCurrPage", e);
         }
+        return new DefaultStreamedContent();
     }
 
     public void nextPage() {
