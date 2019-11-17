@@ -4,7 +4,7 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:pe="http://primefaces.org/ui/extensions" >
+      xmlns:pe="http://primefaces.org/ui/extensions">
     <h:head>
         <title>MIS DocuNet Web Portal</title>
         <style>
@@ -16,13 +16,15 @@
                 font-size: small;
             }
         </style>
+
     </h:head>
 
     <f:metadata>
         <f:viewParam name="dndID" value="#{documentController.dndID}"/>
     </f:metadata>
     <h:body>
-        
+<!--        <p:ajaxStatus onstart="document.getElementById('dndViewerForm:loaderAjax').style.display='';" 
+                      onsuccess="document.getElementById('dndViewerForm:loaderAjax').style.display='none'" />-->
         <h:form id="dndViewerForm">
             <p:outputPanel id="empty" rendered="#{!documentController.hasPages()}">  
                 <h1>NO VALID PAGES</h1>
@@ -32,7 +34,7 @@
 
                 <div id="imageWrapper" style="width:100%; margin:auto; overflow:scroll; position:relative;">  
                     <p:graphicImage id="myImage" style="width:100%;" value="#{documentController.currPage}" 
-                                    cache="false">  
+                                    cache="false">
                     </p:graphicImage>
                 </div>
 
@@ -41,7 +43,7 @@
                             update="growl" />  
                     <pe:javascript event="resize"/>  
                 </pe:imageRotateAndResize> 
-                
+
                 <div style=" min-height: 20px;">
                     <p:graphicImage id="loaderAjax" name="/images/ajax-load.gif" style=" display:none;width:100%;height:20px;" />
                 </div>
@@ -55,24 +57,28 @@
                         <p:outputLabel value="#{documentController.pageFrom}"></p:outputLabel>
                         <p:commandButton ajax="true" actionListener="#{documentController.nextPage}" value="الصفحة اللاحقة"
                                          update="dndViewer" disabled="#{documentController.lastPage}" 
-                                         onstart="document.getElementById('dndViewerForm:loaderAjax').style.display='';"
-                                         oncomplete="document.getElementById('dndViewerForm:loaderAjax').style.display='none'" /> 
+                                          /> 
                         <p:commandButton ajax="true" actionListener="#{documentController.lastPage()}" value="الصفحة الاخيرة"
                                          update="dndViewer" disabled="#{documentController.lastPage}"/> 
                     </h:panelGrid>
                     <h:panelGrid columns="2">
                         <p:commandButton value="تدوير لليسار"  
-                                         onclick="PF('rotateAndResizeWidget').rotateLeft(90);return false;"/>  
+                                         onclick="PF('rotateAndResizeWidget').rotateLeft(90);
+                                                 return false;"/>  
                         <p:commandButton value="تدوير لليمين"  
-                                         onclick="PF('rotateAndResizeWidget').rotateRight(90);return false;"/>  
+                                         onclick="PF('rotateAndResizeWidget').rotateRight(90);
+                                                 return false;"/>  
                     </h:panelGrid>
                     <h:panelGrid columns="3">
                         <p:commandButton value="القياس النظامي"  
-                                         onclick="PF('rotateAndResizeWidget').restoreDefaults();return false;"/>
+                                         onclick="PF('rotateAndResizeWidget').restoreDefaults();
+                                                 return false;"/>
                         <p:commandButton value="تكبير"  
-                                         onclick="PF('rotateAndResizeWidget').scale(1.05);return false;"/>  
+                                         onclick="PF('rotateAndResizeWidget').scale(1.05);
+                                                 return false;"/>  
                         <p:commandButton value="تصغير"  
-                                         onclick="PF('rotateAndResizeWidget').scale(0.95);return false;"/> 
+                                         onclick="PF('rotateAndResizeWidget').scale(0.95);
+                                                 return false;"/> 
                     </h:panelGrid>
 
 
