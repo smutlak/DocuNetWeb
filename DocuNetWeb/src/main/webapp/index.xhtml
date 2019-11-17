@@ -22,7 +22,7 @@
         <f:viewParam name="dndID" value="#{documentController.dndID}"/>
     </f:metadata>
     <h:body>
-        <p:ajaxStatus onstart="document.getElementById('dndViewerForm:loaderAjax').style.display='';" onsuccess="document.getElementById('dndViewerForm:loaderAjax').style.display='none'" />
+        
         <h:form id="dndViewerForm">
             <p:outputPanel id="empty" rendered="#{!documentController.hasPages()}">  
                 <h1>NO VALID PAGES</h1>
@@ -31,7 +31,8 @@
                 <p:growl id="growl" showDetail="true" sticky="true" />  
 
                 <div id="imageWrapper" style="width:100%; margin:auto; overflow:scroll; position:relative;">  
-                    <p:graphicImage id="myImage" style="width:100%;" value="#{documentController.currPage}" cache="false">  
+                    <p:graphicImage id="myImage" style="width:100%;" value="#{documentController.currPage}" 
+                                    cache="false">  
                     </p:graphicImage>
                 </div>
 
@@ -53,7 +54,9 @@
                                          update="dndViewer" disabled="#{documentController.firstPage}" />  
                         <p:outputLabel value="#{documentController.pageFrom}"></p:outputLabel>
                         <p:commandButton ajax="true" actionListener="#{documentController.nextPage}" value="الصفحة اللاحقة"
-                                         update="dndViewer" disabled="#{documentController.lastPage}" /> 
+                                         update="dndViewer" disabled="#{documentController.lastPage}" 
+                                         onstart="document.getElementById('dndViewerForm:loaderAjax').style.display='';"
+                                         oncomplete="document.getElementById('dndViewerForm:loaderAjax').style.display='none'" /> 
                         <p:commandButton ajax="true" actionListener="#{documentController.lastPage()}" value="الصفحة الاخيرة"
                                          update="dndViewer" disabled="#{documentController.lastPage}"/> 
                     </h:panelGrid>
