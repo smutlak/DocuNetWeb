@@ -7,25 +7,54 @@
       xmlns:pe="http://primefaces.org/ui/extensions">
     <h:head>
         <title>MIS DocuNet Web Portal</title>
-        <style>
-            #imageWrapper {
-                height: 86vh; /* vh stands for view-port height, 1vh is 1% of screen height */
-                height: 550px\9;
-            }
-            html,body{
-                font-size: small;
-            }
-        </style>
-        <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
-    </h:head>
 
+    </h:head>
+    <style>
+        .imageWrapperClass {
+            height: 86vh; /* vh stands for view-port height, 1vh is 1% of screen height */
+            display:block; 
+            width:100%; 
+            margin:auto; 
+            overflow:scroll; 
+            position:relative;
+            height: 550px\9;
+        }
+        html,body{
+            font-size: small;
+        }
+    </style>
+    <script type="text/javascript" >
+
+
+        function addEvent() {
+            console.log('Entering addEvent');
+            //console.log(document.getElementById('dndViewerForm:loaderAjax').src);
+
+            document.getElementById('dndViewerForm:loaderAjax').style.display = '';
+            
+            $("#dndViewerForm\\:myImage").on("load", function () {
+                console.log('complete loading');
+                document.getElementById('dndViewerForm:loaderAjax').style.display = 'none';
+                console.log('Reset progress bar');
+                document.getElementById('dndViewerForm:loaderAjax').src = document.getElementById('dndViewerForm:loaderAjax').src+"?a="+Math.random();
+                //addEvent();
+            }).each(function () {
+                if (this.complete) {
+                    $(this).trigger('load');
+                    //console.log('start loading');
+                    //document.getElementById('dndViewerForm:loaderAjax').style.display = '';
+                }
+            });
+        }
+        //jQuery(document).ready(addEvent);
+    </script>
     <f:metadata>
         <f:viewParam name="dndID" value="#{documentController.dndID}"/>
     </f:metadata>
-    
+
     <h:body>
-<!--        <p:ajaxStatus onstart="document.getElementById('dndViewerForm:loaderAjax').style.display='';" 
-                      onsuccess="document.getElementById('dndViewerForm:loaderAjax').style.display='none'" />-->
+        <!--        <p:ajaxStatus onstart="document.getElementById('dndViewerForm:loaderAjax').style.display='';" 
+                              onsuccess="document.getElementById('dndViewerForm:loaderAjax').style.display='none'" />-->
         <h:form id="dndViewerForm">
             <p:outputPanel id="empty" rendered="#{!documentController.hasPages()}">  
                 <h1>NO VALID PAGES</h1>
@@ -33,11 +62,14 @@
             <p:outputPanel id="dndViewer" rendered="#{documentController.hasPages()}">  
                 <p:growl id="growl" showDetail="true" sticky="true" />  
 
-                <div id="imageWrapper" style="width:100%; margin:auto; overflow:scroll; position:relative;">  
-                    <p:graphicImage id="myImage" style="width:100%;" value="#{documentController.currPage}" 
+                <p:outputPanel id="imageWrapper" styleClass="imageWrapperClass">           
+                    <p:graphicImage id="myImage" styleClass="mainPageImage" style="width:100%;" value="#{documentController.currPage}" 
                                     cache="false">
                     </p:graphicImage>
-                </div>
+                    <script type="text/javascript">
+                        $(document).ready(addEvent);
+                    </script>
+                </p:outputPanel>
 
                 <pe:imageRotateAndResize id="rotateAndResize" for="myImage" widgetVar="rotateAndResizeWidget">  
                     <p:ajax event="rotate" listener="#{documentController.rotateListener}"  
@@ -49,18 +81,18 @@
                     <p:graphicImage id="loaderAjax" name="/images/ajax-load.gif" style=" display:none;width:100%;height:20px;" />
                 </div>
 
-                <h:panelGrid columns="4" style="width:100%" >
+                <h:panelGrid id="controlsButtons" columns="4" style="width:100%" >
                     <h:panelGrid columns="5">
                         <p:commandButton actionListener="#{documentController.firstPage()}" value="الصفحة الاولى"  
-                                         update="dndViewer" disabled="#{documentController.firstPage}" />
+                                         update="imageWrapper, controlsButtons" disabled="#{documentController.firstPage}" />
                         <p:commandButton actionListener="#{documentController.prevPage()}" value="الصفحة السايقة"  
-                                         update="dndViewer" disabled="#{documentController.firstPage}" />  
-                        <p:outputLabel value="#{documentController.pageFrom}"></p:outputLabel>
+                                         update="imageWrapper, controlsButtons" disabled="#{documentController.firstPage}" />  
+                        <p:outputLabel id="pageFromLabel" value="#{documentController.pageFrom}"></p:outputLabel>
                         <p:commandButton ajax="true" actionListener="#{documentController.nextPage}" value="الصفحة اللاحقة"
-                                         update="dndViewer" disabled="#{documentController.lastPage}" 
-                                          /> 
+                                         update="imageWrapper, controlsButtons" disabled="#{documentController.lastPage}"
+                                         /> 
                         <p:commandButton ajax="true" actionListener="#{documentController.lastPage()}" value="الصفحة الاخيرة"
-                                         update="dndViewer" disabled="#{documentController.lastPage}"/> 
+                                         update="imageWrapper,controlsButtons" disabled="#{documentController.lastPage}"/> 
                     </h:panelGrid>
                     <h:panelGrid columns="2">
                         <p:commandButton value="تدوير لليسار"  
@@ -71,7 +103,7 @@
                                                  return false;"/>  
                     </h:panelGrid>
                     <h:panelGrid columns="3">
-                        <p:commandButton value="القياس النظامي"  
+                        <p:commandButton value="0"  
                                          onclick="PF('rotateAndResizeWidget').restoreDefaults();
                                                  return false;"/>
                         <p:commandButton value="تكبير"  
@@ -84,7 +116,7 @@
 
 
                     <h:panelGroup style="text-align: right;">
-                        <p:commandButton value="طباعة الصفحة" type="button" icon="pi pi-print">
+                        <p:commandButton value="طباعة الصفحة" rendered="false" type="button" icon="pi pi-print">
                             <p:printer target="myImage" />
                         </p:commandButton>
                     </h:panelGroup>
