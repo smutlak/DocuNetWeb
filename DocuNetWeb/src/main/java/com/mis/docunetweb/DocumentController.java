@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -35,6 +34,7 @@ public class DocumentController implements Serializable {
     //String docPath = "D:/temp/4242521";
     //String TEMP_DIR = System.getProperty("java.io.tmpdir") + "\\DND\\";
     static String DOCUNET_DOCUMENTS_PATH = "D:/temp/4242521";
+    static Integer DOCUNET_SCREEN_WIDTH = 1366;
     private String dndID;
     private String enablePrinting;
     private String perName;
@@ -47,6 +47,13 @@ public class DocumentController implements Serializable {
     static {
         try {
             DOCUNET_DOCUMENTS_PATH = (String) (new InitialContext().lookup("java:comp/env/DOCUNET_DOCUMENTS_PATH"));
+        } catch (NamingException ex) {
+            Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE,
+                    "Exception caught", ex);
+        }
+        
+        try {
+            DOCUNET_SCREEN_WIDTH = Integer.parseInt((String) (new InitialContext().lookup("java:comp/env/DOCUNET_SCREEN_WIDTH")));
         } catch (NamingException ex) {
             Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE,
                     "Exception caught", ex);
@@ -136,7 +143,7 @@ public class DocumentController implements Serializable {
                 } else {
                     String fileName = this.getPages().get(currIndex);
                     if (fileName.toUpperCase().endsWith("TIF") || fileName.toUpperCase().endsWith("TIFF")) {
-                        return new DefaultStreamedContent(ImageConverter.convertTiff(fileName));
+                        return new DefaultStreamedContent(ImageConverter.convertTiff(fileName, DOCUNET_SCREEN_WIDTH));
                     } else {
                         return new DefaultStreamedContent(new FileInputStream(new File(fileName)));
                     }
