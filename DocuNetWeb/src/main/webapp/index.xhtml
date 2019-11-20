@@ -16,12 +16,13 @@
                 font-size: small;
             }
         </style>
-
+        <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
     </h:head>
 
     <f:metadata>
         <f:viewParam name="dndID" value="#{documentController.dndID}"/>
     </f:metadata>
+    
     <h:body>
 <!--        <p:ajaxStatus onstart="document.getElementById('dndViewerForm:loaderAjax').style.display='';" 
                       onsuccess="document.getElementById('dndViewerForm:loaderAjax').style.display='none'" />-->
