@@ -33,7 +33,7 @@ public class ImageConverter {
         ImageDecoder dec = ImageCodec.createImageDecoder("tiff", s, param);
         RenderedImage op = dec.decodeAsRenderedImage(0);
         System.out.println("imageWidth=" + op.getWidth() + "imageHight=" + op.getHeight());
-        if (screenWidth != null && screenWidth > 0) {
+        if (screenWidth != null && screenWidth > 0 && (screenWidth-100)<op.getWidth()) {
             Double dScale = screenWidth/(double)op.getWidth();
             op = scale(op, dScale);
             System.out.println("New *** imageWidth=" + op.getWidth() + "imageHight=" + op.getHeight());
