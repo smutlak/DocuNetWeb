@@ -28,11 +28,11 @@ public class ImageConverter {
         TIFFDecodeParam param = null;
         ImageDecoder dec = ImageCodec.createImageDecoder("tiff", s, param);
         RenderedImage op = dec.decodeAsRenderedImage(0);
-
+        System.out.println("imageWidth="+op.getWidth()+"imageHight="+op.getHeight());
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 
         PNGEncodeParam params = PNGEncodeParam.getDefaultEncodeParam(op);
-        //pngparam.setQuality(67);
+        //params.setQuality(67);
         ImageEncoder en = ImageCodec.createImageEncoder("png", os, params);
         en.encode(op);
         os.flush();
