@@ -51,7 +51,7 @@ public class DocumentController implements Serializable {
             Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE,
                     "Exception caught", ex);
         }
-        
+
         try {
             DOCUNET_SCREEN_WIDTH = Integer.parseInt((String) (new InitialContext().lookup("java:comp/env/DOCUNET_SCREEN_WIDTH")));
         } catch (NamingException ex) {
@@ -78,18 +78,19 @@ public class DocumentController implements Serializable {
     }
 
     public List<String> getPages() {
-
-        pages = new ArrayList();
-        File file = new File(DOCUNET_DOCUMENTS_PATH + File.separator + dndID);
-        if (file.exists()) {
-            for (File p : file.listFiles()) {
-                if (!p.getName().endsWith("thb")) {
-                    System.out.println(p.getAbsolutePath());
-                    pages.add(p.getAbsolutePath());
+        if (pages == null || pages.isEmpty()) {
+            pages = new ArrayList();
+            File file = new File(DOCUNET_DOCUMENTS_PATH + File.separator + dndID);
+            if (file.exists()) {
+                for (File p : file.listFiles()) {
+                    if (!p.getName().endsWith("thb")) {
+                        System.out.println(p.getAbsolutePath());
+                        pages.add(p.getAbsolutePath());
+                    }
                 }
             }
+            updateFlags();
         }
-        updateFlags();
         return pages;
     }
 
@@ -254,6 +255,4 @@ public class DocumentController implements Serializable {
 //        }
 //        path.delete();
 //    }
-    
-    
 }
