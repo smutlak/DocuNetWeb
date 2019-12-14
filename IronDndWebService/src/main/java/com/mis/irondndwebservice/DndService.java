@@ -67,5 +67,7 @@ public interface DndService {
             @WebParam(name = "userName") String userName,
             @WebParam(name = "pass") String pass,
             @WebParam(name = "domain") String domain,
-            @WebParam(name = "docId") Long docId);
+            @WebParam(name = "docId") Long docId,
+            @WebParam(name = "infoTabDelemeted") String infoTabDelemeted
+    );
 }

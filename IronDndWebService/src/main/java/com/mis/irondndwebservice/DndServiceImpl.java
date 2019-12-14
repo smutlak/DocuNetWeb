@@ -38,9 +38,13 @@ import com.invest4all.incommon.inPage;
 import com.invest4all.security.UnAuthenticatedUserException;
 import com.invest4all.server.DataBaseIsDisconnectedException;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.nio.channels.AlreadyBoundException;
+import java.nio.charset.StandardCharsets;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
@@ -283,7 +287,7 @@ public class DndServiceImpl implements DndService {
     }
 
     @Override
-    public Integer GetDocumentPages(String serverName, Integer port, String userName, String pass, String domain, Long docId) {
+    public Integer GetDocumentPages(String serverName, Integer port, String userName, String pass, String domain, Long docId, String infoTabDelemeted) {
         inClient c = null;
         AtomicInteger nRet = new AtomicInteger(0);
         c = logIn(serverName, port, userName, pass, domain, nRet);
@@ -318,6 +322,13 @@ public class DndServiceImpl implements DndService {
                 c.DownloadPage(doc, page, 1, sDocPath);
                 c.DownloadPage(doc, page, 2, sDocPath);
             }
+            OutputStreamWriter writer =
+             new OutputStreamWriter(new FileOutputStream(sDocPath+'\\'+ docId +"_info.txt"), StandardCharsets.UTF_8);
+            
+            writer.write(infoTabDelemeted);
+            writer.flush();
+            writer.close();
+            
             return 1;
 
         } catch (Exception e) {
