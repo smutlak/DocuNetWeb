@@ -173,7 +173,7 @@ public class DocumentController implements Serializable {
                     java.io.InputStream inputStream = null;
                     String fileName = this.getPages().get(currIndex);
                     if (fileName.toUpperCase().endsWith("TIF") || fileName.toUpperCase().endsWith("TIFF")) {
-                        inputStream = ImageConverter.convertTiff(fileName, DOCUNET_SCREEN_WIDTH);
+                        inputStream = ImageConverter.convertTiffToJpg(fileName, DOCUNET_SCREEN_WIDTH);
                     } else {
                         inputStream = new FileInputStream(new File(fileName));
                     }
