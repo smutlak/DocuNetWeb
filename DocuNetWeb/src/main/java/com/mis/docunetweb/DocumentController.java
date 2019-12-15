@@ -91,9 +91,10 @@ public class DocumentController implements Serializable {
                     }
                 }
             }
+            
+            //sort according to page numbers
             if (!pages.isEmpty()) {
                 boolean stopLoop = false;
-                //sort according to page numbers
                 while (!stopLoop) {
                     boolean swap = false;
                     for (int i = 0; i < pages.size(); i++) {
@@ -114,6 +115,7 @@ public class DocumentController implements Serializable {
                     }
                 }
             }
+            //convert the first page then run a thread to convert the rest
             updateFlags();
         }
         return pages;
@@ -167,12 +169,17 @@ public class DocumentController implements Serializable {
                 if (this.getPages() == null || currIndex >= this.getPages().size()) {
                     return new DefaultStreamedContent();
                 } else {
+                    long startTime = System.nanoTime();
+                    java.io.InputStream inputStream = null;
                     String fileName = this.getPages().get(currIndex);
                     if (fileName.toUpperCase().endsWith("TIF") || fileName.toUpperCase().endsWith("TIFF")) {
-                        return new DefaultStreamedContent(ImageConverter.convertTiff(fileName, DOCUNET_SCREEN_WIDTH));
+                        inputStream = ImageConverter.convertTiff(fileName, DOCUNET_SCREEN_WIDTH);
                     } else {
-                        return new DefaultStreamedContent(new FileInputStream(new File(fileName)));
+                        inputStream = new FileInputStream(new File(fileName));
                     }
+                    System.out.println(fileName + " Converion time:" + (((System.nanoTime()-startTime)/1000)));
+                    return new DefaultStreamedContent(inputStream);
+                    
                 }
             }
         } catch (IOException e) {
