@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -43,6 +44,7 @@ public class DocumentController implements Serializable {
     private Boolean lastPage;
     private Boolean firstPage;
     private String pageFrom;
+    private Integer requestedPageNo;
 
     static {
         try {
@@ -83,9 +85,32 @@ public class DocumentController implements Serializable {
             File file = new File(DOCUNET_DOCUMENTS_PATH + File.separator + dndID);
             if (file.exists()) {
                 for (File p : file.listFiles()) {
-                    if (!p.getName().endsWith("thb")) {
-                        System.out.println(p.getAbsolutePath());
+                    if (!p.getName().endsWith("thb") && !p.getName().endsWith("txt")) {
+                        //System.out.println(p.getAbsolutePath());
                         pages.add(p.getAbsolutePath());
+                    }
+                }
+            }
+            if (!pages.isEmpty()) {
+                boolean stopLoop = false;
+                //sort according to page numbers
+                while (!stopLoop) {
+                    boolean swap = false;
+                    for (int i = 0; i < pages.size(); i++) {
+                        String p = pages.get(i);
+                        String sIndex = p.substring(p.lastIndexOf(File.separator) + 1, p.lastIndexOf("."));
+                        int in = Integer.parseInt(sIndex);
+                        if (in != (i + 1)) {
+                            String p1 = pages.get(in - 1);
+                            String p2 = pages.get(i);
+                            pages.set(i, p1);
+                            pages.set(in - 1, p2);
+                            swap = true;
+                            break;
+                        }
+                    }
+                    if (!swap) {
+                        stopLoop = true;
                     }
                 }
             }
@@ -204,7 +229,8 @@ public class DocumentController implements Serializable {
         }
 
         firstPage = this.currIndex <= 0;
-        this.pageFrom = (this.currIndex + 1) + " / " + this.pages.size();
+        //this.pageFrom = (this.currIndex + 1) + " / " + this.pages.size();
+        this.pageFrom = " / " + this.pages.size();
     }
 
     public String getPageFrom() {
@@ -255,4 +281,28 @@ public class DocumentController implements Serializable {
 //        }
 //        path.delete();
 //    }
+    public Integer getRequestedPageNo() {
+        if (requestedPageNo == null) {
+            return (this.currIndex + 1);
+        }
+        return requestedPageNo;
+    }
+
+    public void setRequestedPageNo(Integer requestedPageNo) {
+        this.requestedPageNo = requestedPageNo;
+    }
+
+    public void processPageNo() {
+        if (this.requestedPageNo < 1 || this.requestedPageNo > this.pages.size()) {
+//            FacesContext context = FacesContext.getCurrentInstance();
+//            context.addMessage(context.getViewRoot().findComponent("dndViewerForm:requestedPageNoEdit").getClientId(), new FacesMessage("Test msg"));
+            requestedPageNo = this.currIndex + 1;
+            System.out.println("set requestedPageNo to " + (this.currIndex + 1));
+        } else {
+            this.currIndex = requestedPageNo;
+            System.out.println("set currIndex to " + requestedPageNo);
+            updateFlags();
+        }
+    }
+
 }
