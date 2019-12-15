@@ -44,7 +44,7 @@ public class DocumentController implements Serializable {
     private Boolean lastPage;
     private Boolean firstPage;
     private String pageFrom;
-    private Integer requestedPageNo;
+    
 
     static {
         try {
@@ -282,27 +282,29 @@ public class DocumentController implements Serializable {
 //        path.delete();
 //    }
     public Integer getRequestedPageNo() {
-        if (requestedPageNo == null) {
-            return (this.currIndex + 1);
-        }
-        return requestedPageNo;
+        return (this.currIndex + 1);
     }
 
     public void setRequestedPageNo(Integer requestedPageNo) {
-        this.requestedPageNo = requestedPageNo;
-    }
-
-    public void processPageNo() {
-        if (this.requestedPageNo < 1 || this.requestedPageNo > this.pages.size()) {
-//            FacesContext context = FacesContext.getCurrentInstance();
-//            context.addMessage(context.getViewRoot().findComponent("dndViewerForm:requestedPageNoEdit").getClientId(), new FacesMessage("Test msg"));
-            requestedPageNo = this.currIndex + 1;
-            System.out.println("set requestedPageNo to " + (this.currIndex + 1));
-        } else {
-            this.currIndex = requestedPageNo;
+        if (requestedPageNo > 0 && requestedPageNo < this.pages.size()) {
+            this.currIndex = requestedPageNo -1;
             System.out.println("set currIndex to " + requestedPageNo);
             updateFlags();
         }
+        
     }
+
+//    public void processPageNo() {
+//        if (this.requestedPageNo < 1 || this.requestedPageNo > this.pages.size()) {
+////            FacesContext context = FacesContext.getCurrentInstance();
+////            context.addMessage(context.getViewRoot().findComponent("dndViewerForm:requestedPageNoEdit").getClientId(), new FacesMessage("Test msg"));
+//            requestedPageNo = this.currIndex + 1;
+//            System.out.println("set requestedPageNo to " + (this.currIndex + 1));
+//        } else {
+//            this.currIndex = requestedPageNo;
+//            System.out.println("set currIndex to " + requestedPageNo);
+//            updateFlags();
+//        }
+//    }
 
 }
