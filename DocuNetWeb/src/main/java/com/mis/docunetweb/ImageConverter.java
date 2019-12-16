@@ -29,14 +29,15 @@ import javax.media.jai.operator.SubsampleAverageDescriptor;
  */
 public class ImageConverter {
 
-    public static InputStream convertTiffToPng(String filename, Integer screenWidth) throws Exception {
+
+   public static InputStream convertTiffToPng(String filename, Integer screenWidth) throws Exception {
         SeekableStream s = new FileSeekableStream(filename);
         TIFFDecodeParam param = null;
         ImageDecoder dec = ImageCodec.createImageDecoder("tiff", s, param);
         RenderedImage op = dec.decodeAsRenderedImage(0);
         System.out.println("imageWidth=" + op.getWidth() + "imageHight=" + op.getHeight());
-        if (screenWidth != null && screenWidth > 0 && (screenWidth-100)<op.getWidth()) {
-            Double dScale = screenWidth/(double)op.getWidth();
+        if (screenWidth != null && screenWidth > 0 && (screenWidth - 100) < op.getWidth()) {
+            Double dScale = screenWidth / (double) op.getWidth();
             op = scale(op, dScale);
             System.out.println("New *** imageWidth=" + op.getWidth() + "imageHight=" + op.getHeight());
         }
@@ -45,40 +46,49 @@ public class ImageConverter {
         PNGEncodeParam params = PNGEncodeParam.getDefaultEncodeParam(op);
         //params.setQuality(67);
         ImageEncoder en = ImageCodec.createImageEncoder("png", os, params);
-        en.encode(op.getData(), op.getColorModel());
+        en.encode(op);
         os.flush();
         InputStream is = new ByteArrayInputStream(os.toByteArray());
         os.close();
         return is;
 
     }
-    
+
     public static InputStream convertTiffToJpg(String filename, Integer screenWidth) throws Exception {
         SeekableStream s = new FileSeekableStream(filename);
         TIFFDecodeParam param = null;
         ImageDecoder dec = ImageCodec.createImageDecoder("tiff", s, param);
         RenderedImage op = dec.decodeAsRenderedImage(0);
+//        dec.decodeAsRaster();
+
+//        BufferedImage img2 = new BufferedImage(
+//                            op.getWidth(),
+//                            op.getHeight(),
+//                            BufferedImage.TYPE_INT_RGB);
+//        // Set the RGB values for converted image (jpg)
+//                    for (int y = 0; y < op.getHeight(); y++) {
+//                        for (int x = 0; x < op.getWidth(); x++) {
+//                            img2.setRGB(x, y, op.getColorModel(x, y));
+//                        }
+//                    }
 //        System.out.println("imageWidth=" + op.getWidth() + "imageHight=" + op.getHeight());
 //        if (screenWidth != null && screenWidth > 0 && (screenWidth-100)<op.getWidth()) {
 //            Double dScale = screenWidth/(double)op.getWidth();
 //            op = scale(op, dScale);
 //            System.out.println("New *** imageWidth=" + op.getWidth() + "imageHight=" + op.getHeight());
 //        }
-
-
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 
         //JPEGEncodeParam params = JPEGEncodeParam.getDefaultEncodeParam(op);
         JPEGEncodeParam jpgParam = new JPEGEncodeParam();
         //jpgParam.setQuality(0.75f);
         ImageEncoder en = ImageCodec.createImageEncoder("jpeg", os, jpgParam);
-        en.encode(op);
+        en.encode(op.getData(), op.getColorModel());
         os.flush();
         InputStream is = new ByteArrayInputStream(os.toByteArray());
         os.close();
         return is;
 //JAI.create("filestore", op, "d://temp//t1.jpg", "JPEG");
-
 
     }
 

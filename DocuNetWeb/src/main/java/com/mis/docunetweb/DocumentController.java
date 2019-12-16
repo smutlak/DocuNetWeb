@@ -1,5 +1,6 @@
 package com.mis.docunetweb;
 
+import com.itextpdf.text.DocumentException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -44,7 +45,6 @@ public class DocumentController implements Serializable {
     private Boolean lastPage;
     private Boolean firstPage;
     private String pageFrom;
-    
 
     static {
         try {
@@ -91,7 +91,7 @@ public class DocumentController implements Serializable {
                     }
                 }
             }
-            
+
             //sort according to page numbers
             if (!pages.isEmpty()) {
                 boolean stopLoop = false;
@@ -116,6 +116,9 @@ public class DocumentController implements Serializable {
                 }
             }
             //convert the first page then run a thread to convert the rest
+            for (String page : pages) {
+                new NativeImageConverter().Convert(page, 2);
+            }
             updateFlags();
         }
         return pages;
@@ -177,9 +180,9 @@ public class DocumentController implements Serializable {
                     } else {
                         inputStream = new FileInputStream(new File(fileName));
                     }
-                    System.out.println(fileName + " Converion time:" + (((System.nanoTime()-startTime)/1000)));
+                    System.out.println(fileName + " Converion time:" + (((System.nanoTime() - startTime) / 1000)));
                     return new DefaultStreamedContent(inputStream);
-                    
+
                 }
             }
         } catch (IOException e) {
@@ -294,11 +297,11 @@ public class DocumentController implements Serializable {
 
     public void setRequestedPageNo(Integer requestedPageNo) {
         if (requestedPageNo > 0 && requestedPageNo < this.pages.size()) {
-            this.currIndex = requestedPageNo -1;
+            this.currIndex = requestedPageNo - 1;
             System.out.println("set currIndex to " + requestedPageNo);
             updateFlags();
         }
-        
+
     }
 
 //    public void processPageNo() {
@@ -313,5 +316,4 @@ public class DocumentController implements Serializable {
 //            updateFlags();
 //        }
 //    }
-
 }
