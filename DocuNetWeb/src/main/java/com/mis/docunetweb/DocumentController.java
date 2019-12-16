@@ -90,22 +90,28 @@ public class DocumentController implements Serializable {
                         //System.out.println(p.getAbsolutePath());
                         String page = p.getAbsolutePath();
                         int ret = new NativeImageConverter().convertImage(page, 125);
-                        if (ret != 1) {
-                            System.out.println("there is an error: " + ret);
-                        } else {
-                            String newName = page.substring(0, page.lastIndexOf("."));
-                            newName += ".jpg";
-                            try {
-                                Files.move(java.nio.file.Paths.get(page + ".jpg"), java.nio.file.Paths.get(newName), java.nio.file.StandardCopyOption.ATOMIC_MOVE);
-                                new File(page + ".jpg").renameTo(new File(newName));
-                                new File(page).delete();
-                            } catch (IOException e) {
-                                Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE,
-                                        "Exception caught in renaming files.", e);
-                            }
+                        switch (ret) {
+                            case 0:
+                                System.out.println("No need to convert image: " + page);
+                                break;
+                            case 1: {
+                                String newName = page.substring(0, page.lastIndexOf("."));
+                                newName += ".jpg";
+                                try {
+                                    new File(page).delete();
+                                    Files.move(java.nio.file.Paths.get(page + ".jpg"), java.nio.file.Paths.get(newName), java.nio.file.StandardCopyOption.ATOMIC_MOVE);
+                                } catch (IOException e) {
+                                    Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE,
+                                            "Exception caught in renaming files.", e);
+                                }
 
-                            page = newName;
+                                page = newName;
+                            }
+                            break;
+                            default:
+                                System.out.println("Error converting image: " + page + "Error Code:" + ret);
                         }
+                        
                         pages.add(page);
                     }
                 }
