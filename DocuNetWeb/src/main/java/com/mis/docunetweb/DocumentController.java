@@ -87,34 +87,37 @@ public class DocumentController implements Serializable {
             if (file.exists()) {
                 for (File p : file.listFiles()) {
                     if (!p.getName().endsWith("thb") && !p.getName().endsWith("txt")) {
-                        //System.out.println(p.getAbsolutePath());
                         String page = p.getAbsolutePath();
-                        int ret = new NativeImageConverter().convertImage(page, 125);
-                        switch (ret) {
-                            case 0:
-                                System.out.println("No need to convert image: " + page);
-                                break;
-                            case 1: {
-                                String newName = page.substring(0, page.lastIndexOf("."));
-                                newName += ".jpg";
-                                try {
-                                    new File(page).delete();
-                                    Files.move(java.nio.file.Paths.get(page + ".jpg"), java.nio.file.Paths.get(newName), java.nio.file.StandardCopyOption.ATOMIC_MOVE);
-                                } catch (IOException e) {
-                                    Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE,
-                                            "Exception caught in renaming files.", e);
-                                }
-
-                                page = newName;
-                            }
-                            break;
-                            default:
-                                System.out.println("Error converting image: " + page + "Error Code:" + ret);
-                        }
-                        
                         pages.add(page);
                     }
                 }
+            }
+            //convert image format
+            for (int i = 0; i < pages.size(); i++) {
+                String page = pages.get(i);
+                int ret = new NativeImageConverter().convertImage(page, 125);
+                switch (ret) {
+                    case 0:
+                        System.out.println("No need to convert image: " + page);
+                        break;
+                    case 1: {
+                        String newName = page.substring(0, page.lastIndexOf("."));
+                        newName += ".jpg";
+                        try {
+                            new File(page).delete();
+                            Files.move(java.nio.file.Paths.get(page + ".jpg"), java.nio.file.Paths.get(newName), java.nio.file.StandardCopyOption.ATOMIC_MOVE);
+                        } catch (IOException e) {
+                            Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE,
+                                    "Exception caught in renaming files.", e);
+                        }
+
+                        page = newName;
+                    }
+                    break;
+                    default:
+                        System.out.println("Error converting image: " + page + "Error Code:" + ret);
+                }
+                pages.set(i, page);
             }
 
             //sort according to page numbers
@@ -212,12 +215,12 @@ public class DocumentController implements Serializable {
                     long startTime = System.nanoTime();
                     java.io.InputStream inputStream = null;
                     String fileName = this.getPages().get(currIndex);
-                    if (fileName.toUpperCase().endsWith("TIF") || fileName.toUpperCase().endsWith("TIFF")) {
-                        inputStream = ImageConverter.convertTiffToJpg(fileName, DOCUNET_SCREEN_WIDTH);
-                    } else {
-                        inputStream = new FileInputStream(new File(fileName));
-                    }
-                    System.out.println(fileName + " Converion time:" + (((System.nanoTime() - startTime) / 1000)));
+//                    if (fileName.toUpperCase().endsWith("TIF") || fileName.toUpperCase().endsWith("TIFF")) {
+//                        inputStream = ImageConverter.convertTiffToJpg(fileName, DOCUNET_SCREEN_WIDTH);
+//                    } else {
+                    inputStream = new FileInputStream(new File(fileName));
+//                    }
+                    System.out.println(fileName + " Load time:" + (((System.nanoTime() - startTime) / 1000)));
                     return new DefaultStreamedContent(inputStream);
 
                 }
@@ -299,7 +302,10 @@ public class DocumentController implements Serializable {
 //                deleteRecursive(oldDocumentPath);
 //            }
 //        }
-
+        if (this.dndID != null && this.dndID.equalsIgnoreCase(dndID)) {
+            System.out.println("Same dndID ...do nothing");
+            return;
+        }
         this.dndID = dndID;
         pages = new ArrayList();
         currIndex = 0;
