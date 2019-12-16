@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -87,7 +88,25 @@ public class DocumentController implements Serializable {
                 for (File p : file.listFiles()) {
                     if (!p.getName().endsWith("thb") && !p.getName().endsWith("txt")) {
                         //System.out.println(p.getAbsolutePath());
-                        pages.add(p.getAbsolutePath());
+                        String page = p.getAbsolutePath();
+                        int ret = new NativeImageConverter().convertImage(page, 125);
+                        if (ret != 1) {
+                            System.out.println("there is an error: " + ret);
+                        } else {
+                            String newName = page.substring(0, page.lastIndexOf("."));
+                            newName += ".jpg";
+                            try {
+                                Files.move(java.nio.file.Paths.get(page + ".jpg"), java.nio.file.Paths.get(newName), java.nio.file.StandardCopyOption.ATOMIC_MOVE);
+                                new File(page + ".jpg").renameTo(new File(newName));
+                                new File(page).delete();
+                            } catch (IOException e) {
+                                Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE,
+                                        "Exception caught in renaming files.", e);
+                            }
+
+                            page = newName;
+                        }
+                        pages.add(page);
                     }
                 }
             }
@@ -115,10 +134,22 @@ public class DocumentController implements Serializable {
                     }
                 }
             }
-            //convert the first page then run a thread to convert the rest
-            for (String page : pages) {
-                new NativeImageConverter().convertImage(page, 2);
-            }
+//            //convert the first page then run a thread to convert the rest
+//            for (int i = 0; i < pages.size(); i++) {
+//                String page = pages.get(i);
+//                int ret = new NativeImageConverter().convertImage(page, 125);
+//                if (ret != 1) {
+//                    System.out.println("there is an error: " + ret);
+//                } else {
+//                    String oldName = page;
+//                    String newName = page.substring(1, page.lastIndexOf("."));
+//                    newName += ".jpg";
+//
+//                    new File(oldName).delete();
+//                    new File(oldName + ".jpg").renameTo(new File(newName));
+//                    pages.set(i, newName);
+//                }
+//            }
             updateFlags();
         }
         return pages;
