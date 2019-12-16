@@ -10,15 +10,18 @@ package com.mis.docunetweb;
  * @author smutlak
  */
 public class NativeImageConverter {
+
     static {
         try {
-            //System.load("C:/Users/pabloruiz/library.dll");
-            System.loadLibrary("DndConvert"); // This works too if the dll is in the Java Build Path
+//            System.load("C:/DocuNetDMS/Ltfil15u.dll");
+//            System.load("C:/DocuNetDMS/Ltkrn15u.dll");
+//            System.load("C:/DocuNetDMS/DndConvert.dll");
+            System.loadLibrary("dndconvert2"); // This works too if the dll is in the Java Build Path
         } catch (UnsatisfiedLinkError e) {
             System.out.println("Native code library failed to load.");
             e.printStackTrace();
         }
     }
-    
+
     public native void Convert(String imageFile, int quality);
 }
