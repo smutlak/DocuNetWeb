@@ -117,7 +117,7 @@ public class DocumentController implements Serializable {
             }
             //convert the first page then run a thread to convert the rest
             for (String page : pages) {
-                new NativeImageConverter().Convert(page, 2);
+                new NativeImageConverter().convertImage(page, 2);
             }
             updateFlags();
         }

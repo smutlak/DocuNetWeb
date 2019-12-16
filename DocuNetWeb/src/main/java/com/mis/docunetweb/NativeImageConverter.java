@@ -16,6 +16,8 @@ public class NativeImageConverter {
 //            System.load("C:/DocuNetDMS/Ltfil15u.dll");
 //            System.load("C:/DocuNetDMS/Ltkrn15u.dll");
 //            System.load("C:/DocuNetDMS/DndConvert.dll");
+System.loadLibrary("Ltkrn15u");
+System.loadLibrary("Ltfil15u");
             System.loadLibrary("dndconvert2"); // This works too if the dll is in the Java Build Path
         } catch (UnsatisfiedLinkError e) {
             System.out.println("Native code library failed to load.");
@@ -23,5 +25,5 @@ public class NativeImageConverter {
         }
     }
 
-    public native void Convert(String imageFile, int quality);
+    public native int convertImage(String imageFile, int quality);
 }
