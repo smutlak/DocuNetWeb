@@ -38,6 +38,7 @@ public class DocumentController implements Serializable {
     //String TEMP_DIR = System.getProperty("java.io.tmpdir") + "\\DND\\";
     static String DOCUNET_DOCUMENTS_PATH = "D:/temp/4242521";
     static Integer DOCUNET_SCREEN_WIDTH = 1366;
+    static Integer DOCUNET_PAGE_COMPRESSION =2;
     private String dndID;
     private String enablePrinting;
     private String perName;
@@ -57,6 +58,7 @@ public class DocumentController implements Serializable {
 
         try {
             DOCUNET_SCREEN_WIDTH = Integer.parseInt((String) (new InitialContext().lookup("java:comp/env/DOCUNET_SCREEN_WIDTH")));
+            DOCUNET_PAGE_COMPRESSION = Integer.parseInt((String) (new InitialContext().lookup("java:comp/env/DOCUNET_PAGE_COMPRESSION")));
         } catch (NamingException ex) {
             Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE,
                     "Exception caught", ex);

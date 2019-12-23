@@ -19,17 +19,29 @@
             position:relative;
             height: 550px\9;
             page-break-inside: avoid;
+            page-break-inside: avoid;
         }
         html,body{
             font-size: small;
         }
+        #imageWrapper {
+            page-break-inside: avoid;
+        }
     </style>
     <style type="text/css" media="print">
-        @page {
-            size: landscape;
-        }
-        body{
-            writing-mode: tb-rl;
+        @media print { 
+            @page  {
+                size: A4 portrait landscape;
+                margin: 12mm 10mm 20mm 10mm;
+            }
+            html, body {
+                height: 99%;
+            }
+            body { 
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+                overflow: visible;
+            }
         }
     </style>
     <script type="text/javascript" >
@@ -131,7 +143,7 @@
                                      size="3" 
                                      required="true"
                                      onkeydown="if (event.keyCode === 13) {
-                                                console.log('enter key captured..');
+                                                 console.log('enter key captured..');
                                                  processPageNo();
                                                  return false;
                                              }">
@@ -154,7 +166,7 @@
                                                  return false;"/>  
                     </h:panelGrid>
                     <h:panelGrid columns="3">
-                        <p:commandButton value="0"  
+                        <p:commandButton value="الحالة الاولية"  
                                          onclick="PF('rotateAndResizeWidget').restoreDefaults();
                                                  return false;"/>
                         <p:commandButton value="تكبير" 
@@ -168,7 +180,7 @@
 
                     <h:panelGroup style="text-align: right;">
                         <p:commandButton value="طباعة الصفحة" rendered="true" type="button" icon="pi pi-print">
-                            <p:printer target="imageWrapper" />
+                            <p:printer target="myImage" />
                         </p:commandButton>
                     </h:panelGroup>
                 </h:panelGrid>
