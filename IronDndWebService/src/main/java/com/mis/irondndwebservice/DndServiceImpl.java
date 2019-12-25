@@ -314,7 +314,11 @@ public class DndServiceImpl implements DndService {
             c.getDocument(docId, doc);
 
             String sDocPath = TEMP_DIR + '\\' + serverName.replaceAll("[\\\\/:*?\"<>|]/", "_") + '\\' + docId + '\\';
-            (new File(sDocPath)).mkdirs();
+            File tempFolder = new File(sDocPath);
+            if (tempFolder.exists()) {
+                DndServiceEndpoint.deleteRecursive(tempFolder);
+            }
+            tempFolder.mkdirs();
             System.out.println("Document(" + docId + ") path=" + sDocPath);
             //sDocPath.Format(_T("%s\\%d\\%d\\"), theApp.TEMP_FOLDER, server_id, doc_id);
             c.getDocumentPages(doc, sDocPath);
@@ -322,13 +326,13 @@ public class DndServiceImpl implements DndService {
                 c.DownloadPage(doc, page, 1, sDocPath);
                 c.DownloadPage(doc, page, 2, sDocPath);
             }
-            OutputStreamWriter writer =
-             new OutputStreamWriter(new FileOutputStream(sDocPath+'\\'+ docId +"_info.txt"), StandardCharsets.UTF_8);
-            
+            OutputStreamWriter writer
+                    = new OutputStreamWriter(new FileOutputStream(sDocPath + '\\' + docId + "_info.txt"), StandardCharsets.UTF_8);
+
             writer.write(infoTabDelemeted);
             writer.flush();
             writer.close();
-            
+
             return 1;
 
         } catch (Exception e) {
