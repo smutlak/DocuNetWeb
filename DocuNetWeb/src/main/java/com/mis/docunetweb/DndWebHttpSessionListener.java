@@ -29,18 +29,43 @@ public class DndWebHttpSessionListener implements HttpSessionListener {
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
-        String DndID = "";
+
         System.out.println("sessionDestroyed time=" + new java.util.Date());
+
+
+        String DOCUNET_DOCUMENTS_PATH_TEMP ="";
+        try {
+             DOCUNET_DOCUMENTS_PATH_TEMP = (String) (new InitialContext().lookup("java:comp/env/DOCUNET_DOCUMENTS_PATH"));
+        } catch (NamingException ex) {
+            Logger.getLogger(DndWebHttpSessionListener.class.getName()).log(Level.SEVERE,
+                    "Exception caught", ex);
+        }
+        
+        final String DOCUNET_DOCUMENTS_PATH = DOCUNET_DOCUMENTS_PATH_TEMP;
+        String DndID_temp = "";
+
         Object obj = se.getSession().getAttribute("documentController");
         FacesContext current = FacesContext.getCurrentInstance();
         System.out.println(" Object=" + obj);
-        if(obj instanceof DocumentController){
-           DocumentController docController = (DocumentController)obj;
-           DndID = docController.getDndID();
+        if (obj instanceof DocumentController) {
+            DocumentController docController = (DocumentController) obj;
+            DndID_temp = docController.getDndID();
         }
-        if(DndID != null && !DndID.isEmpty()){
-            System.out.println("Should delete "+DndID);
-        }else{
+        if (DndID_temp != null && !DndID_temp.isEmpty()) {
+            System.out.println("Start Deleting " + DndID_temp);
+            final String DndID = DndID_temp;
+            new java.util.Timer().schedule(
+                    new java.util.TimerTask() {
+                @Override
+                public void run() {
+                    if (DOCUNET_DOCUMENTS_PATH != null && !DOCUNET_DOCUMENTS_PATH.isEmpty()) {
+                        deleteRecursive(new File(DOCUNET_DOCUMENTS_PATH+File.separator+DndID));
+                    }
+                }
+            },
+                    5000
+            );
+        } else {
             System.out.println("Invalid DndID");
         }
         /*Start 8-Feb-2020
@@ -61,15 +86,15 @@ public class DndWebHttpSessionListener implements HttpSessionListener {
     }
 
     private void deleteRecursive(File path) {
-        /*Start 8-Feb-2020
+
         File[] c = path.listFiles();
         Logger.getLogger(DocumentController.class.getName()).log(Level.INFO,
-                    "DocuNetWeb deleteRecursive", "Cleaning out folder:" + path.toString());
+                "DocuNetWeb deleteRecursive", "Cleaning out folder:" + path.toString());
         System.out.println("Cleaning out folder:" + path.toString());
         for (File file : c) {
             if (file.isDirectory()) {
                 Logger.getLogger(DocumentController.class.getName()).log(Level.INFO,
-                    "DocuNetWeb deleteRecursive", "Deleting file:" + file.toString());
+                        "DocuNetWeb deleteRecursive", "Deleting file:" + file.toString());
                 System.out.println("Deleting file:" + file.toString());
                 deleteRecursive(file);
                 file.delete();
@@ -78,7 +103,7 @@ public class DndWebHttpSessionListener implements HttpSessionListener {
             }
         }
         path.delete();
-    End 8-Feb-2020*/
+
     }
 
 }
