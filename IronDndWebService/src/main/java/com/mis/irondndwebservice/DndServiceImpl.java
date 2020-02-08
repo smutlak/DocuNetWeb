@@ -324,7 +324,7 @@ public class DndServiceImpl implements DndService {
             c.getDocumentPages(doc, sDocPath);
             for (inPage page : doc.getPages()) {
                 c.DownloadPage(doc, page, 1, sDocPath);
-                c.DownloadPage(doc, page, 2, sDocPath);
+                //c.DownloadPage(doc, page, 2, sDocPath);
             }
             OutputStreamWriter writer
                     = new OutputStreamWriter(new FileOutputStream(sDocPath + '\\' + docId + "_info.txt"), StandardCharsets.UTF_8);
