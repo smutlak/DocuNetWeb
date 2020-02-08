@@ -8,6 +8,7 @@ package com.mis.docunetweb;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.context.FacesContext;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpSessionEvent;
@@ -17,16 +18,31 @@ import javax.servlet.http.HttpSessionListener;
  *
  * @author smutlak
  */
-public class DndWebHttpSessionListener implements HttpSessionListener  {
+public class DndWebHttpSessionListener implements HttpSessionListener {
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        System.out.println("sessionCreated");
+        System.out.println("sessionCreated time=" + new java.util.Date());
+        se.getSession().setMaxInactiveInterval(2 * 60);
     }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
+        String DndID = "";
+        System.out.println("sessionDestroyed time=" + new java.util.Date());
+        Object obj = se.getSession().getAttribute("documentController");
+        FacesContext current = FacesContext.getCurrentInstance();
+        System.out.println(" Object=" + obj);
+        if(obj instanceof DocumentController){
+           DocumentController docController = (DocumentController)obj;
+           DndID = docController.getDndID();
+        }
+        if(DndID != null && !DndID.isEmpty()){
+            System.out.println("Should delete "+DndID);
+        }else{
+            System.out.println("Invalid DndID");
+        }
         /*Start 8-Feb-2020
         String DOCUNET_DOCUMENTS_PATH = null;
         try {
@@ -43,7 +59,7 @@ public class DndWebHttpSessionListener implements HttpSessionListener  {
         }
     End 8-Feb-2020*/
     }
-    
+
     private void deleteRecursive(File path) {
         /*Start 8-Feb-2020
         File[] c = path.listFiles();
@@ -64,5 +80,5 @@ public class DndWebHttpSessionListener implements HttpSessionListener  {
         path.delete();
     End 8-Feb-2020*/
     }
-    
+
 }

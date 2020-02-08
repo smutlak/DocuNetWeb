@@ -109,8 +109,10 @@ public class DocumentController implements Serializable {
                         String newName = page.substring(0, page.lastIndexOf("."));
                         newName += ".jpg";
                         try {
-                            new File(page).delete();
-                            Files.move(java.nio.file.Paths.get(page + ".jpg"), java.nio.file.Paths.get(newName), java.nio.file.StandardCopyOption.ATOMIC_MOVE);
+                            if((new File(page + ".jpg").exists())){
+                                new File(page).delete();
+                                Files.move(java.nio.file.Paths.get(page + ".jpg"), java.nio.file.Paths.get(newName), java.nio.file.StandardCopyOption.ATOMIC_MOVE);
+                            }
                         } catch (IOException e) {
                             Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE,
                                     "Exception caught in renaming files.", e);
@@ -207,7 +209,6 @@ public class DocumentController implements Serializable {
         try {
             this.getPages();
             FacesContext context = FacesContext.getCurrentInstance();
-
             if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
                 // So, we're rendering the view. Return a stub StreamedContent so that it will generate right URL.
                 return new DefaultStreamedContent();

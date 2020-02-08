@@ -4,7 +4,7 @@
 
     <groupId>com.sameer</groupId>
     <artifactId>DocuNetWeb</artifactId>
-    <version>2.4</version>
+    <version>2.5</version>
     <packaging>war</packaging>
 
     <name>DocuNetWeb</name>
@@ -30,7 +30,20 @@
         </dependency>
 
         <!-- JSF 2 -->
-        <dependency>
+        <!-- https://mvnrepository.com/artifact/com.sun.faces/jsf-api -->
+<dependency>
+    <groupId>com.sun.faces</groupId>
+    <artifactId>jsf-api</artifactId>
+    <version>2.2.20</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/com.sun.faces/jsf-impl -->
+<dependency>
+    <groupId>com.sun.faces</groupId>
+    <artifactId>jsf-impl</artifactId>
+    <version>2.2.20</version>
+</dependency>
+
+        <!--<dependency>
             <groupId>com.sun.faces</groupId>
             <artifactId>jsf-api</artifactId>
             <version>2.1.11</version>
@@ -40,7 +53,7 @@
             <groupId>com.sun.faces</groupId>
             <artifactId>jsf-impl</artifactId>
             <version>2.1.11</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -141,9 +154,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
+                <version>3.2.3</version>
                 <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <failOnMissingWebXml>true</failOnMissingWebXml>
                 </configuration>
             </plugin>
             <plugin>
