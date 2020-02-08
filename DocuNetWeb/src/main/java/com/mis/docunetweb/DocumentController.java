@@ -63,6 +63,8 @@ public class DocumentController implements Serializable {
             Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE,
                     "Exception caught", ex);
         }
+        
+        
     }
 
     public DocumentController() {
@@ -88,7 +90,8 @@ public class DocumentController implements Serializable {
             File file = new File(DOCUNET_DOCUMENTS_PATH + File.separator + dndID);
             if (file.exists()) {
                 for (File p : file.listFiles()) {
-                    if (!p.getName().endsWith("thb") && !p.getName().endsWith("txt")) {
+                    if (!p.getName().endsWith("thb") && !p.getName().endsWith("txt")
+                            && !p.getName().endsWith("ann")) {
                         String page = p.getAbsolutePath();
                         pages.add(page);
                     }

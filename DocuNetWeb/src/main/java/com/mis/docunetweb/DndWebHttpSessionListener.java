@@ -27,7 +27,7 @@ public class DndWebHttpSessionListener implements HttpSessionListener  {
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        /*Start 8-Feb-2020
         String DOCUNET_DOCUMENTS_PATH = null;
         try {
             DOCUNET_DOCUMENTS_PATH = (String) (new InitialContext().lookup("java:comp/env/DOCUNET_DOCUMENTS_PATH"));
@@ -41,9 +41,11 @@ public class DndWebHttpSessionListener implements HttpSessionListener  {
                deleteRecursive(childFolder);
            }
         }
+    End 8-Feb-2020*/
     }
     
     private void deleteRecursive(File path) {
+        /*Start 8-Feb-2020
         File[] c = path.listFiles();
         Logger.getLogger(DocumentController.class.getName()).log(Level.INFO,
                     "DocuNetWeb deleteRecursive", "Cleaning out folder:" + path.toString());
@@ -60,6 +62,7 @@ public class DndWebHttpSessionListener implements HttpSessionListener  {
             }
         }
         path.delete();
+    End 8-Feb-2020*/
     }
     
 }
