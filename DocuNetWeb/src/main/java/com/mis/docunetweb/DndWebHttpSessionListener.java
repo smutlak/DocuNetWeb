@@ -24,7 +24,7 @@ public class DndWebHttpSessionListener implements HttpSessionListener {
     public void sessionCreated(HttpSessionEvent se) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         System.out.println("sessionCreated time=" + new java.util.Date());
-        se.getSession().setMaxInactiveInterval(2 * 60);
+        se.getSession().setMaxInactiveInterval(5 * 60);
     }
 
     @Override
