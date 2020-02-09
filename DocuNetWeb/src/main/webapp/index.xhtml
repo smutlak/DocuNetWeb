@@ -6,8 +6,8 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:pe="http://primefaces.org/ui/extensions">
     <h:head>
+        <meta http-equiv="refresh" content="#{session.maxInactiveInterval};url=#{request.contextPath}/sessionExpired.xhtml"/>
         <title>MIS DocuNet Web Portal</title>
-
     </h:head>
     <style>
         .imageWrapperClass {
@@ -100,7 +100,12 @@
                               onsuccess="document.getElementById('dndViewerForm:loaderAjax').style.display='none'" />-->
         <h:form id="dndViewerForm" onsubmit="return false;">
             <p:outputPanel id="empty" rendered="#{!documentController.hasPages()}">  
-                <h1>NO VALID PAGES</h1>
+                <p:panel style=" text-align:center;">
+                    <h:panelGrid columns="1" style="margin: 0 auto; padding-top: 10%;">
+                        <p:graphicImage name="/images/stop.png" style=" width: 50%" />
+                        <h1 style="font-size: 40px; color:red;">تم رفض الطلب</h1>
+                    </h:panelGrid>
+                </p:panel>
             </p:outputPanel>
             <p:outputPanel id="dndViewer" rendered="#{documentController.hasPages()}">  
                 <p:growl id="growl" showDetail="true" sticky="true" />  

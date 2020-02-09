@@ -302,12 +302,6 @@ public class DocumentController implements Serializable {
     }
 
     public void setDndID(String dndID) {
-//        if(this.dndID != null && !dndID.equalsIgnoreCase(this.dndID)){
-//            File oldDocumentPath = new File(DOCUNET_DOCUMENTS_PATH + File.separator + this.dndID);
-//            if(oldDocumentPath.exists()){
-//                deleteRecursive(oldDocumentPath);
-//            }
-//        }
         if (this.dndID != null && this.dndID.equalsIgnoreCase(dndID)) {
             System.out.println("Same dndID ...do nothing");
             return;
@@ -319,7 +313,7 @@ public class DocumentController implements Serializable {
     }
 
     public Boolean hasPages() {
-        return !this.getPages().isEmpty();
+        return !this.getPages().isEmpty() && this.dndID!=null;
     }
 
 //    private void deleteRecursive(File path) {
