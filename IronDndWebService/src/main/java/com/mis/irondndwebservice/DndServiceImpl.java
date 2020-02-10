@@ -48,6 +48,8 @@ import java.nio.charset.StandardCharsets;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -297,19 +299,6 @@ public class DndServiceImpl implements DndService {
         }
 
         try {
-            /*
-                CDndDocument* pDocInfo = new CDndDocument(server_id, doc_id, lVersionID);
-		if(pDoc != NULL) pDocInfo->SetDocTypeID(pDoc->GetDocTypeID());
-
-		CString sDocPath = _T("");
-		sDocPath.Format(_T("%s\\%d\\%d\\"), theApp.TEMP_FOLDER, server_id, doc_id);
-		CreateDirectory(sDocPath, NULL);
-		sDocPath.AppendFormat(_T("%ld\\"), lVersionID);
-		CreateDirectory(sDocPath, NULL);
-
-		pDocInfo->SetCashFolder(sDocPath);
-		pDocInfo->GetDocumentPages(sDocPath, TRUE);
-             */
             inDocument doc = new inDocument();
             c.getDocument(docId, doc);
 
@@ -320,16 +309,21 @@ public class DndServiceImpl implements DndService {
             }
             tempFolder.mkdirs();
             System.out.println("Document(" + docId + ") path=" + sDocPath);
-            //sDocPath.Format(_T("%s\\%d\\%d\\"), theApp.TEMP_FOLDER, server_id, doc_id);
+            
             c.getDocumentPages(doc, sDocPath);
+            int pagesCount  = doc.pages.size();
             for (inPage page : doc.getPages()) {
                 c.DownloadPage(doc, page, 1, sDocPath);
                 //c.DownloadPage(doc, page, 2, sDocPath);
             }
             OutputStreamWriter writer
-                    = new OutputStreamWriter(new FileOutputStream(sDocPath + '\\' + docId + "_info.txt"), StandardCharsets.UTF_8);
+                    = new OutputStreamWriter(new FileOutputStream(sDocPath + '\\' + "info.txt"), StandardCharsets.UTF_8);
 
-            writer.write(infoTabDelemeted);
+            org.json.JSONObject obj = new org.json.JSONObject(infoTabDelemeted);
+            String sTimestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+            obj.put("timestamp", sTimestamp);
+            obj.put("pageCount", pagesCount);
+            writer.write(obj.toString());
             writer.flush();
             writer.close();
 
