@@ -206,6 +206,7 @@ public class DocumentController implements Serializable {
     }
 
     public StreamedContent getCurrPage() {
+        System.out.println("getCurrPage("+currIndex+") time=" + new java.util.Date());
         try {
             this.getPages();
             FacesContext context = FacesContext.getCurrentInstance();
