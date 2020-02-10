@@ -181,7 +181,7 @@
                     </h:panelGrid>
 
                     <h:panelGroup style="text-align: right;">
-                        <p:commandButton value="طباعة الصفحة" rendered="true" disabled="false" 
+                        <p:commandButton value="طباعة الصفحة" rendered="true" disabled="#{!documentController.printAllowed}" 
                                          type="button" icon="pi pi-print" onclick="printPage()">
                             
                         </p:commandButton>

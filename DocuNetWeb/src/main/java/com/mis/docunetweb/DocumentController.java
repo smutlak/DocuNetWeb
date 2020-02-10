@@ -1,12 +1,18 @@
 package com.mis.docunetweb;
 
 import com.itextpdf.text.DocumentException;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +44,7 @@ public class DocumentController implements Serializable {
     //String TEMP_DIR = System.getProperty("java.io.tmpdir") + "\\DND\\";
     static String DOCUNET_DOCUMENTS_PATH = "D:/temp/4242521";
     static Integer DOCUNET_SCREEN_WIDTH = 1366;
-    static Integer DOCUNET_PAGE_COMPRESSION =2;
+    static Integer DOCUNET_PAGE_COMPRESSION = 2;
     private String dndID;
     private String enablePrinting;
     private String perName;
@@ -47,6 +53,8 @@ public class DocumentController implements Serializable {
     private Boolean lastPage;
     private Boolean firstPage;
     private String pageFrom;
+
+    private org.json.JSONObject docInfo;
 
     static {
         try {
@@ -63,8 +71,7 @@ public class DocumentController implements Serializable {
             Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE,
                     "Exception caught", ex);
         }
-        
-        
+
     }
 
     public DocumentController() {
@@ -109,7 +116,7 @@ public class DocumentController implements Serializable {
                         String newName = page.substring(0, page.lastIndexOf("."));
                         newName += ".jpg";
                         try {
-                            if((new File(page + ".jpg").exists())){
+                            if ((new File(page + ".jpg").exists())) {
                                 new File(page).delete();
                                 Files.move(java.nio.file.Paths.get(page + ".jpg"), java.nio.file.Paths.get(newName), java.nio.file.StandardCopyOption.ATOMIC_MOVE);
                             }
@@ -206,7 +213,7 @@ public class DocumentController implements Serializable {
     }
 
     public StreamedContent getCurrPage() {
-        System.out.println("getCurrPage("+currIndex+") time=" + new java.util.Date());
+        System.out.println("getCurrPage(" + currIndex + ") time=" + new java.util.Date());
         try {
             this.getPages();
             FacesContext context = FacesContext.getCurrentInstance();
@@ -308,13 +315,42 @@ public class DocumentController implements Serializable {
             return;
         }
         this.dndID = dndID;
+        docInfo = getDocumentInfo();
         pages = new ArrayList();
         currIndex = 0;
         this.getPages();
     }
 
+    private org.json.JSONObject getDocumentInfo() {
+        BufferedReader br = null;
+        try {
+            File file = new File(DOCUNET_DOCUMENTS_PATH + File.separator + dndID
+                    + File.separator + "info.txt");
+            br = new BufferedReader(new FileReader(file));
+            String contents = "";
+            String st;
+            while ((st = br.readLine()) != null) {
+                contents += st;
+            }
+            br.close();
+            org.json.JSONObject obj = new org.json.JSONObject(contents);
+            return obj;
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                br.close();
+            } catch (IOException ex) {
+                Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return null;
+    }
+
     public Boolean hasPages() {
-        return !this.getPages().isEmpty() && this.dndID!=null;
+        return !this.getPages().isEmpty() && this.dndID != null && tooOldDocument()==false;
     }
 
     public Integer getRequestedPageNo() {
@@ -327,6 +363,56 @@ public class DocumentController implements Serializable {
             System.out.println("set currIndex to " + requestedPageNo);
             updateFlags();
         }
+    }
 
+    public boolean getPrintAllowed() {
+        //docInfo.get("DndID")
+        if (docInfo != null) {
+            if (docInfo.get("printAllowed") != null) {
+                if (docInfo.get("printAllowed") instanceof Boolean) {
+                    return ((Boolean) docInfo.get("printAllowed"));
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean tooOldDocument() {
+        Date docDate = getTimestamp();
+        Integer parsedPageCount = getParsedPageCount();
+        Date curDate = new Date();
+
+        if (docDate != null && parsedPageCount != null && parsedPageCount>0) {
+            long lMillis = curDate.getTime() - docDate.getTime();
+            if (lMillis > 0 && lMillis <= (parsedPageCount * 4 * 1000)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Date getTimestamp() {
+        if (docInfo != null) {
+            if (docInfo.get("timestamp") != null) {
+                String sTimestamp = ((String) docInfo.get("timestamp"));
+                try {
+                    return new SimpleDateFormat("yyyyMMddHHmmss").parse(sTimestamp);
+                } catch (ParseException ex) {
+                    Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return null;
+    }
+
+    public Integer getParsedPageCount() {
+        if (docInfo != null) {
+            if (docInfo.get("pageCount") != null) {
+                if (docInfo.get("pageCount") instanceof Integer) {
+                    return ((Integer) docInfo.get("pageCount"));
+                }
+            }
+        }
+        return 0;
     }
 }
