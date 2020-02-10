@@ -26,6 +26,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.sun.media.jai.codec.ImageCodec;
 import com.sun.media.jai.codec.ImageDecoder;
 import com.sun.media.jai.codec.TIFFDecodeParam;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -85,5 +87,30 @@ public class Utils {
                 document.close();
             }
         }
+    }
+    
+    public static void deleteRecursive(File path) {
+
+        if(path.getAbsolutePath().length()<5){
+            System.out.println(path.getAbsolutePath()+" is risky to be deleted!!!!!!");
+            return;
+        }
+        File[] c = path.listFiles();
+        Logger.getLogger(DocumentController.class.getName()).log(Level.INFO,
+                "DocuNetWeb deleteRecursive", "Cleaning out folder:" + path.toString());
+        System.out.println("Cleaning out folder:" + path.toString());
+        for (File file : c) {
+            if (file.isDirectory()) {
+                Logger.getLogger(DocumentController.class.getName()).log(Level.INFO,
+                        "DocuNetWeb deleteRecursive", "Deleting file:" + file.toString());
+                System.out.println("Deleting file:" + file.toString());
+                deleteRecursive(file);
+                file.delete();
+            } else {
+                file.delete();
+            }
+        }
+        path.delete();
+
     }
 }

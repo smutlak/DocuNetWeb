@@ -31,8 +31,7 @@ public class DndWebHttpSessionListener implements HttpSessionListener {
     public void sessionDestroyed(HttpSessionEvent se) {
 
         System.out.println("sessionDestroyed time=" + new java.util.Date());
-
-
+        
         String DOCUNET_DOCUMENTS_PATH_TEMP ="";
         try {
              DOCUNET_DOCUMENTS_PATH_TEMP = (String) (new InitialContext().lookup("java:comp/env/DOCUNET_DOCUMENTS_PATH"));
@@ -45,7 +44,6 @@ public class DndWebHttpSessionListener implements HttpSessionListener {
         String DndID_temp = "";
 
         Object obj = se.getSession().getAttribute("documentController");
-        FacesContext current = FacesContext.getCurrentInstance();
         System.out.println(" Object=" + obj);
         if (obj instanceof DocumentController) {
             DocumentController docController = (DocumentController) obj;
@@ -59,7 +57,7 @@ public class DndWebHttpSessionListener implements HttpSessionListener {
                 @Override
                 public void run() {
                     if (DOCUNET_DOCUMENTS_PATH != null && !DOCUNET_DOCUMENTS_PATH.isEmpty()) {
-                        deleteRecursive(new File(DOCUNET_DOCUMENTS_PATH+File.separator+DndID));
+                        Utils.deleteRecursive(new File(DOCUNET_DOCUMENTS_PATH+File.separator+DndID));
                     }
                 }
             },
@@ -68,42 +66,5 @@ public class DndWebHttpSessionListener implements HttpSessionListener {
         } else {
             System.out.println("Invalid DndID");
         }
-        /*Start 8-Feb-2020
-        String DOCUNET_DOCUMENTS_PATH = null;
-        try {
-            DOCUNET_DOCUMENTS_PATH = (String) (new InitialContext().lookup("java:comp/env/DOCUNET_DOCUMENTS_PATH"));
-        } catch (NamingException ex) {
-            Logger.getLogger(DndWebHttpSessionListener.class.getName()).log(Level.SEVERE,
-                    "Exception caught", ex);
-        }
-        if(DOCUNET_DOCUMENTS_PATH != null && !DOCUNET_DOCUMENTS_PATH.isEmpty()){
-           File folder = new File(DOCUNET_DOCUMENTS_PATH);
-           for (File childFolder : folder.listFiles()){
-               deleteRecursive(childFolder);
-           }
-        }
-    End 8-Feb-2020*/
     }
-
-    private void deleteRecursive(File path) {
-
-        File[] c = path.listFiles();
-        Logger.getLogger(DocumentController.class.getName()).log(Level.INFO,
-                "DocuNetWeb deleteRecursive", "Cleaning out folder:" + path.toString());
-        System.out.println("Cleaning out folder:" + path.toString());
-        for (File file : c) {
-            if (file.isDirectory()) {
-                Logger.getLogger(DocumentController.class.getName()).log(Level.INFO,
-                        "DocuNetWeb deleteRecursive", "Deleting file:" + file.toString());
-                System.out.println("Deleting file:" + file.toString());
-                deleteRecursive(file);
-                file.delete();
-            } else {
-                file.delete();
-            }
-        }
-        path.delete();
-
-    }
-
 }

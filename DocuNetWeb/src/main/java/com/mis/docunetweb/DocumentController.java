@@ -317,24 +317,6 @@ public class DocumentController implements Serializable {
         return !this.getPages().isEmpty() && this.dndID!=null;
     }
 
-//    private void deleteRecursive(File path) {
-//        File[] c = path.listFiles();
-//        Logger.getLogger(DocumentController.class.getName()).log(Level.INFO,
-//                    "DocuNetWeb deleteRecursive", "Cleaning out folder:" + path.toString());
-//        System.out.println("Cleaning out folder:" + path.toString());
-//        for (File file : c) {
-//            if (file.isDirectory()) {
-//                Logger.getLogger(DocumentController.class.getName()).log(Level.INFO,
-//                    "DocuNetWeb deleteRecursive", "Deleting file:" + file.toString());
-//                System.out.println("Deleting file:" + file.toString());
-//                deleteRecursive(file);
-//                file.delete();
-//            } else {
-//                file.delete();
-//            }
-//        }
-//        path.delete();
-//    }
     public Integer getRequestedPageNo() {
         return (this.currIndex + 1);
     }
@@ -347,17 +329,4 @@ public class DocumentController implements Serializable {
         }
 
     }
-
-//    public void processPageNo() {
-//        if (this.requestedPageNo < 1 || this.requestedPageNo > this.pages.size()) {
-////            FacesContext context = FacesContext.getCurrentInstance();
-////            context.addMessage(context.getViewRoot().findComponent("dndViewerForm:requestedPageNoEdit").getClientId(), new FacesMessage("Test msg"));
-//            requestedPageNo = this.currIndex + 1;
-//            System.out.println("set requestedPageNo to " + (this.currIndex + 1));
-//        } else {
-//            this.currIndex = requestedPageNo;
-//            System.out.println("set currIndex to " + requestedPageNo);
-//            updateFlags();
-//        }
-//    }
 }

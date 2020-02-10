@@ -6,7 +6,6 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:pe="http://primefaces.org/ui/extensions">
     <h:head>
-        <meta http-equiv="refresh" content="#{session.maxInactiveInterval};url=#{request.contextPath}/sessionExpired.xhtml"/>
         <title>MIS DocuNet Web Portal</title>
     </h:head>
     <style>
@@ -45,26 +44,30 @@
         }
     </style>
     <script type="text/javascript" >
+        (function () {
+            const idleDurationSecs = 15 * 60;
+            const redirectUrl = window.location.pathname+'sessionExpired.xhtml';  // Redirect idle users to this URL
+            let idleTimeout; // variable to hold the timeout, do not modify
 
-//        $.fn.attachDragger = function () {
-//            var attachment = false, lastPosition, position, difference;
-//            $($(this).selector).on("mousedown mouseup mousemove", function (e) {
-//                if (e.type == "mousedown")
-//                    attachment = true, lastPosition = [e.clientX, e.clientY];
-//                if (e.type == "mouseup")
-//                    attachment = false;
-//                if (e.type == "mousemove" &amp;&amp; attachment == true) {
-//                    position = [e.clientX, e.clientY];
-//                    difference = [(position[0] - lastPosition[0]), (position[1] - lastPosition[1])];
-//                    $(this).scrollLeft($(this).scrollLeft() - difference[0]);
-//                    $(this).scrollTop($(this).scrollTop() - difference[1]);
-//                    lastPosition = [e.clientX, e.clientY];
-//                }
-//            });
-//            $(window).on("mouseup", function () {
-//                attachment = false;
-//            });
-//        }
+            const resetIdleTimeout = function () {
+                // Clears the existing timeout
+                if (idleTimeout)
+                    clearTimeout(idleTimeout);
+
+                // Set a new idle timeout to load the redirectUrl after idleDurationSecs
+                idleTimeout = setTimeout(function(){location.href = redirectUrl;}, idleDurationSecs * 1000);
+            };
+
+            // Init on page load
+            resetIdleTimeout();
+
+            // Reset the idle timeout on any of the events listed below
+            ['click', 'touchstart', 'mousemove'].forEach(function(evt){
+                document.addEventListener(evt, resetIdleTimeout, false);}
+            );
+
+        })();
+
 
         function addEvent() {
             console.log('Entering addEvent');
