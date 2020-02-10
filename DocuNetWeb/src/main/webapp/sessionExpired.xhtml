@@ -9,14 +9,14 @@
         <title>MIS DocuNet Web Portal</title>
     </h:head>
     <h:body>
-        <p:outputPanel id="empty">  
-            <p:panel style=" text-align:center;">
+          
+            <p:panel style="border: none;text-align:center;">
                 <h:panelGrid columns="1" style="margin: 0 auto; padding-top: 10%;">
                     <p:graphicImage name="/images/exclamation.png" style=" width: 50%" />
-                    <p:outputLabel value="#{sessionExpiredController.msg}"></p:outputLabel>
+                    <p:outputLabel style="font-size: 40px; color:red;" value="#{sessionExpiredController.msg}"></p:outputLabel>
                 </h:panelGrid>
             </p:panel>
-        </p:outputPanel>
+        
     </h:body>
 </html>
 

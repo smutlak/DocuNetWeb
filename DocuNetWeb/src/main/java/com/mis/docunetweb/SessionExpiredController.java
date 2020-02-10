@@ -21,7 +21,7 @@ public class SessionExpiredController {
      */
     private String msg;
     public SessionExpiredController() {
-        msg = "إنتهاء الجلسة, يجب إعادة الطلب";
+        msg = "إنتهاء الجلسة، يجب إعادة الطلب";
     }
 
     public String getMsg() {
