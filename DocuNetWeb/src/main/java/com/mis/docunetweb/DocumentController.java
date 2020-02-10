@@ -378,16 +378,17 @@ public class DocumentController implements Serializable {
     }
 
     public boolean tooOldDocument() {
-        Date docDate = getTimestamp();
-        Integer parsedPageCount = getParsedPageCount();
-        Date curDate = new Date();
-
-        if (docDate != null && parsedPageCount != null && parsedPageCount>0) {
-            long lMillis = curDate.getTime() - docDate.getTime();
-            if (lMillis > 0 && lMillis <= (parsedPageCount * 4 * 1000)) {
-                return true;
-            }
-        }
+//        Date docDate = getTimestamp();
+//        Integer parsedPageCount = getParsedPageCount();
+//        Date curDate = new Date();
+//
+//        if (docDate != null && parsedPageCount != null && parsedPageCount>0) {
+//            long lMillis = curDate.getTime() - docDate.getTime();
+//            if (lMillis > 0 && lMillis <= (parsedPageCount * 4 * 1000)) {
+//                return false;
+//            }
+//        }
+//        return true;
         return false;
     }
 
