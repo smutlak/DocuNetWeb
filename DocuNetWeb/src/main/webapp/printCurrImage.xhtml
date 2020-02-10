@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+    <h:head>
+        <title>MIS DocuNet Web Portal</title>
+        <style>
+            @media print { 
+                html,body{height:100%;width:100%;margin:0;padding:0;}
+                @page{size: A4 portrait;max-height:100%; max-width:100%
+                          /* margin: 12mm 10mm 20mm 10mm;*/
+                }
+                #printedImage{
+                    height: 100%;
+                    width: 100%;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    margin: 0;
+                }
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <p:graphicImage id="printedImage" styleClass="mainPageImage" style="width:100%;" value="#{documentController.currPage}" 
+                        cache="false">
+        </p:graphicImage>
+    </h:body>
+</html>
+

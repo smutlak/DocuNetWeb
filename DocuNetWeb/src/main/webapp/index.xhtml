@@ -27,26 +27,11 @@
             page-break-inside: avoid;
         }
     </style>
-    <style type="text/css" media="print">
-        @media print { 
-            @page  {
-                size: A4 portrait landscape;
-                margin: 12mm 10mm 20mm 10mm;
-            }
-            html, body {
-                height: 99%;
-            }
-            body { 
-                -webkit-print-color-adjust: exact;
-                color-adjust: exact;
-                overflow: visible;
-            }
-        }
-    </style>
+
     <script type="text/javascript" >
         (function () {
             const idleDurationSecs = 15 * 60;
-            const redirectUrl = window.location.pathname+'sessionExpired.xhtml';  // Redirect idle users to this URL
+            const redirectUrl = window.location.pathname + 'sessionExpired.xhtml';  // Redirect idle users to this URL
             let idleTimeout; // variable to hold the timeout, do not modify
 
             const resetIdleTimeout = function () {
@@ -55,15 +40,18 @@
                     clearTimeout(idleTimeout);
 
                 // Set a new idle timeout to load the redirectUrl after idleDurationSecs
-                idleTimeout = setTimeout(function(){location.href = redirectUrl;}, idleDurationSecs * 1000);
+                idleTimeout = setTimeout(function () {
+                    location.href = redirectUrl;
+                }, idleDurationSecs * 1000);
             };
 
             // Init on page load
             resetIdleTimeout();
 
             // Reset the idle timeout on any of the events listed below
-            ['click', 'touchstart', 'mousemove'].forEach(function(evt){
-                document.addEventListener(evt, resetIdleTimeout, false);}
+            ['click', 'touchstart', 'mousemove'].forEach(function (evt) {
+                document.addEventListener(evt, resetIdleTimeout, false);
+            }
             );
 
         })();
@@ -71,7 +59,6 @@
 
         function addEvent() {
             console.log('Entering addEvent');
-            //console.log(document.getElementById('dndViewerForm:loaderAjax').src);
 
             document.getElementById('dndViewerForm:loaderAjax').style.display = '';
 
@@ -93,6 +80,14 @@
 //        $(document).ready(function () {
 //            $("#dndViewerForm\\:myImage").attachDragger();
 //        });
+
+        function printPage()
+        {
+            var pwa = window.open(window.location.pathname + 'printCurrImage.xhtml', "_new");
+            pwa.window.location = window.location.pathname + 'printCurrImage.xhtml';
+            //pwa.window.close();
+            pwa.window.print();
+        }
     </script>
     <f:metadata>
         <f:viewParam name="dndID" value="#{documentController.dndID}"/>
@@ -185,10 +180,10 @@
                                                  return false;"/> 
                     </h:panelGrid>
 
-
                     <h:panelGroup style="text-align: right;">
-                        <p:commandButton value="طباعة الصفحة" rendered="true" type="button" icon="pi pi-print">
-                            <p:printer target="myImage" />
+                        <p:commandButton value="طباعة الصفحة" rendered="true" disabled="false" 
+                                         type="button" icon="pi pi-print" onclick="printPage()">
+                            
                         </p:commandButton>
                     </h:panelGroup>
                 </h:panelGrid>
