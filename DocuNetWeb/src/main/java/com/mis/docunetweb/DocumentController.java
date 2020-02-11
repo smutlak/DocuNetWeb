@@ -110,7 +110,7 @@ public class DocumentController implements Serializable {
                 int ret = new NativeImageConverter().convertImage(page, 125);
                 switch (ret) {
                     case 0:
-                        System.out.println("No need to convert image: " + page);
+                        System.out.println("DocumentController::getPages::No need to convert image: " + page);
                         break;
                     case 1: {
                         String newName = page.substring(0, page.lastIndexOf("."));
@@ -129,7 +129,7 @@ public class DocumentController implements Serializable {
                     }
                     break;
                     default:
-                        System.out.println("Error converting image: " + page + "Error Code:" + ret);
+                        System.out.println("DocumentController::getPages::Error converting image: " + page + "Error Code:" + ret);
                 }
                 pages.set(i, page);
             }
@@ -213,7 +213,7 @@ public class DocumentController implements Serializable {
     }
 
     public StreamedContent getCurrPage() {
-        System.out.println("getCurrPage(" + currIndex + ") time=" + new java.util.Date());
+        System.out.println("DocumentController::getCurrPage::getCurrPage(" + currIndex + ") time=" + new java.util.Date());
         try {
             this.getPages();
             FacesContext context = FacesContext.getCurrentInstance();
@@ -234,7 +234,7 @@ public class DocumentController implements Serializable {
 //                    } else {
                     inputStream = new FileInputStream(new File(fileName));
 //                    }
-                    System.out.println(fileName + " Load time:" + (((System.nanoTime() - startTime) / 1000)));
+                    System.out.println(fileName + "DocumentController::getCurrPage Load time:" + (((System.nanoTime() - startTime) / 1000)));
                     return new DefaultStreamedContent(inputStream);
 
                 }
@@ -311,7 +311,7 @@ public class DocumentController implements Serializable {
 
     public void setDndID(String dndID) {
         if (this.dndID != null && this.dndID.equalsIgnoreCase(dndID)) {
-            System.out.println("Same dndID ...do nothing");
+            System.out.println("DocumentController::setDndID::Same dndID ...do nothing");
             return;
         }
         this.dndID = dndID;
@@ -332,7 +332,6 @@ public class DocumentController implements Serializable {
             while ((st = br.readLine()) != null) {
                 contents += st;
             }
-            br.close();
             org.json.JSONObject obj = new org.json.JSONObject(contents);
             return obj;
         } catch (FileNotFoundException ex) {
@@ -341,7 +340,7 @@ public class DocumentController implements Serializable {
             Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                br.close();
+                if(br != null) {br.close();}
             } catch (IOException ex) {
                 Logger.getLogger(DocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -360,7 +359,7 @@ public class DocumentController implements Serializable {
     public void setRequestedPageNo(Integer requestedPageNo) {
         if (requestedPageNo > 0 && requestedPageNo < this.pages.size()) {
             this.currIndex = requestedPageNo - 1;
-            System.out.println("set currIndex to " + requestedPageNo);
+            System.out.println("DocumentController::setRequestedPageNo::set currIndex to " + requestedPageNo);
             updateFlags();
         }
     }

@@ -35,11 +35,11 @@ public class ImageConverter {
         TIFFDecodeParam param = null;
         ImageDecoder dec = ImageCodec.createImageDecoder("tiff", s, param);
         RenderedImage op = dec.decodeAsRenderedImage(0);
-        System.out.println("imageWidth=" + op.getWidth() + "imageHight=" + op.getHeight());
+        System.out.println("DocumentController::convertTiffToPng::imageWidth=" + op.getWidth() + "imageHight=" + op.getHeight());
         if (screenWidth != null && screenWidth > 0 && (screenWidth - 100) < op.getWidth()) {
             Double dScale = screenWidth / (double) op.getWidth();
             op = scale(op, dScale);
-            System.out.println("New *** imageWidth=" + op.getWidth() + "imageHight=" + op.getHeight());
+            System.out.println("DocumentController::convertTiffToPng::New *** imageWidth=" + op.getWidth() + "imageHight=" + op.getHeight());
         }
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 

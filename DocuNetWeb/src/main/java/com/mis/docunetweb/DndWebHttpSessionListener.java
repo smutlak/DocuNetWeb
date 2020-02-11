@@ -23,14 +23,14 @@ public class DndWebHttpSessionListener implements HttpSessionListener {
     @Override
     public void sessionCreated(HttpSessionEvent se) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        System.out.println("sessionCreated time=" + new java.util.Date());
+        System.out.println("DndWebHttpSessionListener::sessionCreated::sessionCreated time=" + new java.util.Date());
         se.getSession().setMaxInactiveInterval(15 * 60);
     }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
 
-        System.out.println("sessionDestroyed time=" + new java.util.Date());
+        System.out.println("DndWebHttpSessionListener::sessionDestroyed::sessionDestroyed time=" + new java.util.Date());
         
         String DOCUNET_DOCUMENTS_PATH_TEMP ="";
         try {
@@ -44,13 +44,13 @@ public class DndWebHttpSessionListener implements HttpSessionListener {
         String DndID_temp = "";
 
         Object obj = se.getSession().getAttribute("documentController");
-        System.out.println(" Object=" + obj);
+        System.out.println("DndWebHttpSessionListener::sessionDestroyed:: Object=" + obj);
         if (obj instanceof DocumentController) {
             DocumentController docController = (DocumentController) obj;
             DndID_temp = docController.getDndID();
         }
         if (DndID_temp != null && !DndID_temp.isEmpty()) {
-            System.out.println("Start Deleting " + DndID_temp);
+            System.out.println("DndWebHttpSessionListener::sessionDestroyed::Start Deleting " + DndID_temp);
             final String DndID = DndID_temp;
             new java.util.Timer().schedule(
                     new java.util.TimerTask() {
@@ -64,7 +64,7 @@ public class DndWebHttpSessionListener implements HttpSessionListener {
                     5000
             );
         } else {
-            System.out.println("Invalid DndID");
+            System.out.println("DndWebHttpSessionListener::sessionDestroyed::Invalid DndID");
         }
     }
 }

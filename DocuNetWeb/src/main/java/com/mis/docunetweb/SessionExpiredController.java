@@ -31,9 +31,9 @@ public class SessionExpiredController {
     }
 
     public String getMsg() {
-        System.out.println("SessionExpiredController.getMsg time=" + new java.util.Date());
+        System.out.println("DocumentController::getMsg::SessionExpiredController.getMsg time=" + new java.util.Date());
         
-        System.out.println("sessionDestroyed time=" + new java.util.Date());
+        System.out.println("DocumentController::getMsg:: time=" + new java.util.Date());
         
         String DOCUNET_DOCUMENTS_PATH_TEMP ="";
         try {
@@ -57,7 +57,7 @@ public class SessionExpiredController {
             DndID_temp = docController.getDndID();
         }
         if (DndID_temp != null && !DndID_temp.isEmpty()) {
-            System.out.println("Start Deleting " + DndID_temp);
+            System.out.println("DocumentController::getMsg::Start Deleting " + DndID_temp);
             final String DndID = DndID_temp;
             new java.util.Timer().schedule(
                     new java.util.TimerTask() {
@@ -71,7 +71,7 @@ public class SessionExpiredController {
                     5000
             );
         } else {
-            System.out.println("Invalid DndID");
+            System.out.println("DocumentController::getMsg::Invalid DndID");
         }
         
         return msg;

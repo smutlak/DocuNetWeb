@@ -70,7 +70,7 @@ public class Utils {
                             img2.setRGB(x, y, bufferedImage.getRGB(x, y));
                         }
                     }
-                    System.out.println("Page: " + (i + 1));
+                    System.out.println("Utils::TiffToJpg::Page: " + (i + 1));
                     // Set the RGB values for converted image (jpg)
                    //To image
                       /*  String s = "C:/Users/TIFF/tiff"+i+".jpg";
@@ -92,18 +92,18 @@ public class Utils {
     public static void deleteRecursive(File path) {
 
         if(path.getAbsolutePath().length()<5){
-            System.out.println(path.getAbsolutePath()+" is risky to be deleted!!!!!!");
+            System.out.println("Utils::deleteRecursive::" +path.getAbsolutePath()+" is risky to be deleted!!!!!!");
             return;
         }
         File[] c = path.listFiles();
         Logger.getLogger(DocumentController.class.getName()).log(Level.INFO,
                 "DocuNetWeb deleteRecursive", "Cleaning out folder:" + path.toString());
-        System.out.println("Cleaning out folder:" + path.toString());
+        System.out.println("Utils::deleteRecursive::Cleaning out folder:" + path.toString());
         for (File file : c) {
             if (file.isDirectory()) {
                 Logger.getLogger(DocumentController.class.getName()).log(Level.INFO,
                         "DocuNetWeb deleteRecursive", "Deleting file:" + file.toString());
-                System.out.println("Deleting file:" + file.toString());
+                System.out.println("Utils::deleteRecursive::Deleting file:" + file.toString());
                 deleteRecursive(file);
                 file.delete();
             } else {

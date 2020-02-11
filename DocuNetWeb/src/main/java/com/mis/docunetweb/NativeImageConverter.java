@@ -24,7 +24,7 @@ public class NativeImageConverter {
             System.loadLibrary("Ltclr15u");
             System.loadLibrary("dndconvert2"); // This works too if the dll is in the Java Build Path
         } catch (UnsatisfiedLinkError e) {
-            System.out.println("Native code library failed to load.");
+            System.out.println("DocumentController::NativeImageConverter::Native code library failed to load.");
             e.printStackTrace();
         }
     }
