@@ -59,17 +59,18 @@ public class SessionExpiredController {
         if (DndID_temp != null && !DndID_temp.isEmpty()) {
             System.out.println("DocumentController::getMsg::Start Deleting " + DndID_temp);
             final String DndID = DndID_temp;
-            new java.util.Timer().schedule(
-                    new java.util.TimerTask() {
-                @Override
-                public void run() {
-                    if (DOCUNET_DOCUMENTS_PATH != null && !DOCUNET_DOCUMENTS_PATH.isEmpty()) {
-                        Utils.deleteRecursive(new File(DOCUNET_DOCUMENTS_PATH+File.separator+DndID));
-                    }
-                }
-            },
-                    5000
-            );
+//            new java.util.Timer().schedule(
+//                    new java.util.TimerTask() {
+//                @Override
+//                public void run() {
+//                    if (DOCUNET_DOCUMENTS_PATH != null && !DOCUNET_DOCUMENTS_PATH.isEmpty()) {
+//                        Utils.deleteRecursive(new File(DOCUNET_DOCUMENTS_PATH+File.separator+DndID));
+//                    }
+//                }
+//            },
+//                    5000
+//            );
+              Utils.deleteRecursive(new File(DOCUNET_DOCUMENTS_PATH+File.separator+DndID));
         } else {
             System.out.println("DocumentController::getMsg::Invalid DndID");
         }

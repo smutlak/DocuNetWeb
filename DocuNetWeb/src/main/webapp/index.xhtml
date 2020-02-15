@@ -30,7 +30,7 @@
 
     <script type="text/javascript" >
         (function () {
-            const idleDurationSecs = 15 * 60;
+            const idleDurationSecs = 14 * 60;
             const redirectUrl = window.location.pathname + 'sessionExpired.xhtml';  // Redirect idle users to this URL
             let idleTimeout; // variable to hold the timeout, do not modify
 
@@ -49,7 +49,8 @@
             resetIdleTimeout();
 
             // Reset the idle timeout on any of the events listed below
-            ['click', 'touchstart', 'mousemove'].forEach(function (evt) {
+            //['click', 'touchstart', 'mousemove'].forEach(function (evt) {
+            ['click'].forEach(function (evt) {
                 document.addEventListener(evt, resetIdleTimeout, false);
             }
             );
@@ -85,8 +86,10 @@
         {
             var pwa = window.open(window.location.pathname + 'printCurrImage.xhtml', "_new");
             pwa.window.location = window.location.pathname + 'printCurrImage.xhtml';
-            //pwa.window.close();
             pwa.window.print();
+            //setTimeout(function(){}, 500);
+            pwa.window.onfocus = function (){setTimeout(function(){pwa.window.close();}, 500);}
+          //  pwa.window.close();
         }
     </script>
     <f:metadata>

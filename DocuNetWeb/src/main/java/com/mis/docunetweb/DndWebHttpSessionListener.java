@@ -24,7 +24,7 @@ public class DndWebHttpSessionListener implements HttpSessionListener {
     public void sessionCreated(HttpSessionEvent se) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         System.out.println("DndWebHttpSessionListener::sessionCreated::sessionCreated time=" + new java.util.Date());
-        se.getSession().setMaxInactiveInterval(15 * 60);
+        //se.getSession().setMaxInactiveInterval(15 * 60);
     }
 
     @Override
@@ -52,17 +52,18 @@ public class DndWebHttpSessionListener implements HttpSessionListener {
         if (DndID_temp != null && !DndID_temp.isEmpty()) {
             System.out.println("DndWebHttpSessionListener::sessionDestroyed::Start Deleting " + DndID_temp);
             final String DndID = DndID_temp;
-            new java.util.Timer().schedule(
-                    new java.util.TimerTask() {
-                @Override
-                public void run() {
-                    if (DOCUNET_DOCUMENTS_PATH != null && !DOCUNET_DOCUMENTS_PATH.isEmpty()) {
-                        Utils.deleteRecursive(new File(DOCUNET_DOCUMENTS_PATH+File.separator+DndID));
-                    }
-                }
-            },
-                    5000
-            );
+//            new java.util.Timer().schedule(
+//                    new java.util.TimerTask() {
+//                @Override
+//                public void run() {
+//                    if (DOCUNET_DOCUMENTS_PATH != null && !DOCUNET_DOCUMENTS_PATH.isEmpty()) {
+//                        Utils.deleteRecursive(new File(DOCUNET_DOCUMENTS_PATH+File.separator+DndID));
+//                    }
+//                }
+//            },
+//                    5000
+//            );
+              Utils.deleteRecursive(new File(DOCUNET_DOCUMENTS_PATH+File.separator+DndID));
         } else {
             System.out.println("DndWebHttpSessionListener::sessionDestroyed::Invalid DndID");
         }
